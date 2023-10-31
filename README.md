@@ -10,7 +10,7 @@ Mario Run é uma emocionante recriação do famoso jogo "Google Dino Run", inser
 
 ## Como jogar?
 
-Para jogar o T-Rex Game, siga as instruções abaixo:
+Para jogar o Mario Run, siga as instruções abaixo:
 
 ### 1. Baixar:
 ...
