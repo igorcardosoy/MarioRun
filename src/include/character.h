@@ -3,7 +3,7 @@
 typedef struct character_type* Character;
 
 // Função que detem o poder de iniciar o personagem do jogo. Recebe como argumento a posição X dele e a posição Y, sua largura(Width) e sua altura(Heigth), onde dentro da função esses dados são colocados como atributos do personagem.
-void character_init(Character* character, SDL_Renderer* renderer,int x, int y, int width, int height);
+void character_init(Character* character, SDL_Renderer* renderer, int width, int height);
 
 // Função que detem o poder de desenhar o personagem na tela, sendo assim responsavel por animar o personagem e definir as animacoes caso o persona esteja pulando ou esteja agachado, e define tambem a gravidade do personagem. Recebe como argumento o personagem, o renderer e window.
 void character_animate(Character character, SDL_Renderer* renderer, int width, int height);
@@ -15,7 +15,7 @@ void character_jump(Character character, int height);
 void character_fall(Character character, int height);
 
 // Função que retorna o calculo da colisão do personagem. Recebe como argumento o personagem.
-void character_get_colision(Character character, int* x1, int* x2, int* y1, int* y2);
+void character_get_colision(Character character, double* x1, double* x2, double* y1, double* y2);
 
 // Função para retornar a posição Y do personagem. Podendo ser utilizada para varios parametros.
 int character_get_position_y(Character character);
