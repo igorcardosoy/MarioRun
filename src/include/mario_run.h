@@ -12,16 +12,16 @@ typedef struct game_type* Game;
 void game_init(Game* game);
 
 // Mostra o menu na tela.
-void game_menu(Game game, bool is_dead);
+bool game_menu(Game game, bool is_dead);
 
 // Anima o jogo e todos os seus elementos.
 void game_animate(Game game);
 
 // Detecta os eventos do jogo, como teclas.
-void game_events(Game game);
+bool game_events(Game game);
 
 // Executa o jogo em loop até a morte do player.
-void game_run(Game game, int* quit);
+void game_run(Game game, bool* quit);
 
 // Reseta o jogo e todos os paramestros de outros TADs.
 void game_reset(Game game);
