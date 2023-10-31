@@ -3,7 +3,7 @@
 typedef struct sky_type* Sky;
 
 // Inicializa o céu (sky) e define sua posição e tamanho.
-void sky_init(Sky* sky, SDL_Renderer* renderer, int x, int y, int width, int height);
+void sky_init(Sky* sky, SDL_Renderer* renderer, int width, int height);
 
 // Anima o céu (sky) com sua velocidade. Sendo que gera um efeito de loop e da direita para a esquerda.
 void sky_animate(Sky sky, SDL_Renderer* renderer, int width, int height, double speed);
