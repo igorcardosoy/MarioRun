@@ -3,7 +3,7 @@
 int main(int argc, char* argv[])
 {
     Game game;
-    int quit = 0;
+    bool quit = false;
 
     game_init(&game);
     

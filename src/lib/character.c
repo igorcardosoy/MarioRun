@@ -14,7 +14,7 @@ void character_init(Character* character, SDL_Renderer* renderer, int width, int
   //not implemented
 }
 
-void character_animate(Character character, SDL_Renderer* renderer, SDL_Window* window)
+void character_animate(Character character, SDL_Renderer* renderer, int width, int height)
 {
   //not implemented
 }
@@ -39,7 +39,7 @@ int character_get_position_y(Character character)
   //not implemented
 }
 
-void character_destroy(Character character)
+void character_destroy(Character* character)
 {
   //not implemented
 }

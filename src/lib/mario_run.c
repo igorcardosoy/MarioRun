@@ -64,7 +64,7 @@ void game_animate(Game game)
 
   sky_animate(game->sky, game->renderer, game->width, game->height, game->speed);
   ground_animate(game->ground, game->renderer, game->width, game->height, game->speed);
-  character_animate(game->character, game->renderer, game->width, game->height, game->speed);
+  character_animate(game->character, game->renderer, game->width, game->height);
 
   obstacle_animate(game->obstacle, game->renderer, game->width, game->height, game->speed);
   if (obstacle_get_position_x(game->obstacle) == -obstacle_get_width(game->obstacle)) {
@@ -120,8 +120,8 @@ bool are_colliding(Character character, Obstacle obstacle)
   double c_x1, c_x2, c_y1, c_y2;
   double o_x1, o_x2, o_y1, o_y2;
 
-  get_character_colision(character, &c_x1, &c_x2, &c_y1, &c_y2);
-  get_obstacle_colision(obstacle, &o_x1, &o_x2, &o_y1, &o_y2);
+  character_get_colision(character, &c_x1, &c_x2, &c_y1, &c_y2);
+  obstacle_get_colision(obstacle, &o_x1, &o_x2, &o_y1, &o_y2);
 
   if (c_x1 < o_x2)
     return false;

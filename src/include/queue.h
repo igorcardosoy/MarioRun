@@ -44,3 +44,8 @@ bool queue_enqueue(Queue queue, Element new_element);
  * Remove o primeiro elemento da fila.
 */
 Element queue_dequeue(Queue queue);
+
+/**
+ * Libera a memória alocada pela fila e por cada elemento.
+*/
+bool queue_destroy(Queue* queue);

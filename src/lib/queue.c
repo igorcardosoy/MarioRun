@@ -28,3 +28,8 @@ Element queue_dequeue(Queue queue)
 {
   //not implemented
 }
+
+bool queue_destroy(Queue* queue)
+{
+  //not implemented
+}
