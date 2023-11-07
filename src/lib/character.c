@@ -5,7 +5,7 @@ struct character_type {
   int width, height;
   int gravity;
   bool is_dead;
-  SDL_Texture* texture; // Por enquanto a textura indica uma imagem estatica, mas depois pode ser um vetor de texturas para animacao ou um gif.
+  SDL_Texture* animation[12];
   SDL_Texture* texture_dead;
 };
 

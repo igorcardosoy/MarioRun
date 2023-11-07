@@ -23,12 +23,13 @@ void game_init(Game* game)
     (*game)->speed = 1;
     (*game)->score = 0;
 
+  
     SDL_Init(SDL_INIT_VIDEO);
 
-    SDL_GetWindowSize((*game)->window, &(*game)->width, &(*game)->height);
-
-    (*game)->window = SDL_CreateWindow("Mario Run", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, (*game)->width, (*game)->height, SDL_WINDOW_RESIZABLE);
+    (*game)->window = SDL_CreateWindow("Mario Run", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 0, 0, SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
     (*game)->renderer = SDL_CreateRenderer((*game)->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+
+    SDL_GetWindowSize((*game)->window, &(*game)->width, &(*game)->height);
 
     sky_init(&(*game)->sky, (*game)->renderer, (*game)->width, (*game)->height);
     ground_init(&(*game)->ground, (*game)->renderer, (*game)->width, (*game)->height);
@@ -47,6 +48,7 @@ void game_init(Game* game)
       obstacle_init(&(*game)->obstacle,(*game)->renderer, (*game)->width, (*game)->height, type);
       queue_enqueue((*game)->queue, (*game)->obstacle);
     }
+    
   }
 }
 
@@ -77,7 +79,7 @@ void game_animate(Game game)
     game->obstacle = queue_dequeue(game->queue);
   }
 
-  game->score += 0.25;
+  game->score += 0.25 * game->speed;
 
   if (game->score % 100 == 0) {
     game->speed += 0.5;
