@@ -1,7 +1,7 @@
 #include "../include/queue.h"
 
 struct queue_type {
-  int not_implemented;
+  Element obstaculos[QUEUE_MAX_SIZE];
 };
 
 void queue_init(Queue* queue)
