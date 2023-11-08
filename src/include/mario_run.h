@@ -20,7 +20,7 @@ void game_animate(Game game);
 // Detecta os eventos do jogo, como teclas.
 bool game_events(Game game);
 
-// Executa o jogo em loop até a morte do player.
+// Executa o jogo em loop até o player decidir sair do jogo.
 void game_run(Game game, bool* quit);
 
 // Reseta o jogo e todos os paramestros de outros TADs.
