@@ -99,6 +99,9 @@ bool game_events(Game game)
 
 void game_run(Game game, bool* quit)
 {
+
+  game_menu(game, false);
+
   while (!*quit) {
     game_animate(game);
     *quit = game_events(game);

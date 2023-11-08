@@ -10,7 +10,6 @@ int main(int argc, char* argv[])
     
     while (!quit)
     {
-        // game_menu(game, false);
         game_run(game, &quit);
     }
 
