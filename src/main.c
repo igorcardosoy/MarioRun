@@ -7,13 +7,10 @@ int main(int argc, char* argv[])
 
     game_init(&game);
 
-    
     while (!quit)
     {
         game_run(game, &quit);
     }
-
-    game_destroy(&game);
 
     return 0;
 }

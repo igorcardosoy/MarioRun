@@ -111,6 +111,8 @@ void game_run(Game game, bool* quit)
       game_reset(game);
     }
   }
+
+  game_destroy(&game);
 }
 
 void game_reset(Game game)
