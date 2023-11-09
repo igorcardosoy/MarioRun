@@ -22,7 +22,6 @@ void game_init(Game* game)
   if (*game != NULL) {
     (*game)->speed = 1;
     (*game)->score = 0;
-
   
     SDL_Init(SDL_INIT_VIDEO);
 
