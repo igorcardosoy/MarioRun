@@ -82,7 +82,7 @@ void game_animate(Game game)
   game->score += 0.25 * game->speed;
 
   if (game->score % 100 == 0) {
-    game->speed += 0.5;
+    game->speed += 0.15;
   }
 
   char score[10];
