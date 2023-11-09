@@ -10,11 +10,11 @@ void sky_init(Sky* sky, SDL_Renderer* renderer, int width, int height)
 {
   *sky = malloc(sizeof(struct sky_type));
   if (*sky != NULL) {
-    (*sky)->x = //not implemented;
-    (*sky)->y = //not implemented;
+    (*sky)->x = 0;
+    (*sky)->y = 0;
     (*sky)->width = width;
     (*sky)->height = height;
-    (*sky)->texture = IMG_LoadTexture(renderer, "src/assets/sky.png");
+    (*sky)->texture = IMG_LoadTexture(renderer, "src/assets/images/clouds_pixelart.png");
   }
 }
 
@@ -25,7 +25,7 @@ void sky_animate(Sky sky, SDL_Renderer* renderer, int width, int height, double 
 
   sky->x -= speed;
   if (sky->x <= -width) {
-    sky->x = width;
+    sky->x = 0;
   }
 
   SDL_SetRenderDrawColor(renderer, 94, 145, 254, 255);
