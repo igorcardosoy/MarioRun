@@ -3,7 +3,9 @@
 struct character_type {
   int x, y;
   int width, height;
-  int gravity;
+  double gravity;
+  double speed;
+  double frame;
   bool is_dead;
   SDL_Texture* animation[12];
   SDL_Texture* texture_dead;
@@ -11,12 +13,59 @@ struct character_type {
 
 void character_init(Character* character, SDL_Renderer* renderer, int width, int height)
 {
-  //not implemented
+  *character = malloc(sizeof(struct character_type));
+
+  if (*character != NULL) {
+    (*character)->x = width * 0.1;
+    (*character)->y = 0;
+    (*character)->width = width * 0.15;
+    (*character)->height = height * 0.15;
+    (*character)->speed = 0;
+    (*character)->gravity = 0.2;
+    (*character)->frame = 0;
+    (*character)->is_dead = false;
+
+    for (int i = 0; i < 12; i++) {
+      char path[50];
+      snprintf(path, 50, "src/assets/images/Mario/mario_frame%d.png", i);
+      (*character)->animation[i] = IMG_LoadTexture(renderer, path);
+
+      if ((*character)->animation[i] == NULL) {
+        printf("Erro ao carregar textura do personagem!\n");
+      }
+    }
+    (*character)->texture_dead = IMG_LoadTexture(renderer, "assets/images/mario_dead.png");
+  }
 }
 
 void character_animate(Character character, SDL_Renderer* renderer, int width, int height)
 {
-  //not implemented
+  character->width = (width * 0.15);
+  character->height = (height * 0.15);
+  int bottom = height * 0.70;
+
+  SDL_Rect characterRect = { character->x, character->y, character->height, character->height };
+  SDL_RenderCopy(renderer, character->animation[(int)character->frame], NULL, &characterRect);
+
+  // Gravidade 
+  if (character->y < bottom) {
+    character->speed += character->gravity;
+    character->y += character->speed;
+    if (character->y == bottom) {
+      character->speed = 0;
+    }
+  }
+  if (character->y > bottom)
+    character->y = bottom;
+
+  // Reset da animação.
+  if (character->y < bottom) {
+    character->frame = 5;
+  } else if (character->frame >= 12) {
+    character->frame = 0;
+  } else {
+    character->frame += 0.15;
+  }
 }
 
 void character_jump(Character character, int height)
@@ -31,15 +80,23 @@ void character_fall(Character character, int height)
 
 void character_get_colision(Character character, double* x1, double* x2, double* y1, double* y2)
 {
-  //not implemented
+  *x1 = character->x + character->width / 2;
+  *x2 = character->x - character->width / 2;
+  *y1 = character->y + character->height / 2;
+  *y2 = character->y - character->height / 2;
 }
 
 int character_get_position_y(Character character)
 {
-  //not implemented
+  return character->y;
 }
 
 void character_destroy(Character* character)
 {
-  //not implemented
+  for (int i = 0; i < 12; i++) {
+    SDL_DestroyTexture((*character)->animation[i]);
+  }
+
+  free(*character);
+
 }
