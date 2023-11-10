@@ -25,7 +25,7 @@ void game_init(Game* game)
 
     SDL_Init(SDL_INIT_VIDEO);
 
-    (*game)->window = SDL_CreateWindow("Mario Run", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 0, 0, SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
+    (*game)->window = SDL_CreateWindow("Mario Run", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 760, 540, SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
     (*game)->renderer = SDL_CreateRenderer((*game)->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     SDL_GetWindowSize((*game)->window, &(*game)->width, &(*game)->height);
@@ -81,7 +81,6 @@ void game_animate(Game game)
 
   if ((int)game->score % 100 == 0 && game->score < 1500) {
     game->speed += 0.20;
-    printf("Velociade atual: %f\n", game->speed); //DEBUG
   }
 
   char score[10];
@@ -93,7 +92,40 @@ void game_animate(Game game)
 
 bool game_events(Game game)
 {
-  //not implemented
+  bool stop = false;
+  SDL_Event event;
+
+  while (SDL_PollEvent(&event)) {
+    switch (event.type) {
+      case SDL_WINDOWEVENT_CLOSE:
+        if (game->window) {
+          SDL_DestroyWindow(game->window);
+          game->window = NULL;
+          stop = true;
+        }
+        break;
+      case SDL_KEYDOWN:
+        switch (event.key.keysym.sym) {
+          case SDLK_ESCAPE:
+            stop = true;
+            break;
+          case SDLK_UP:
+          case SDLK_SPACE:
+            character_jump(game->character, game->height);
+            stop = true;
+            break;
+          case SDLK_DOWN:
+            character_fall(game->character, game->height);
+            stop = true;
+            break;
+          case SDL_QUIT:
+            stop = true;
+            break;
+        }
+    }
+  }
+
+  return stop;
 }
 
 void game_run(Game game, bool* quit)

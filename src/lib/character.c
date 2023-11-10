@@ -42,10 +42,7 @@ void character_animate(Character character, SDL_Renderer* renderer, int width, i
 {
   character->width = (width * 0.15);
   character->height = (height * 0.15);
-  int bottom = height * 0.70;
-
-  SDL_Rect characterRect = { character->x, character->y, character->height, character->height };
-  SDL_RenderCopy(renderer, character->animation[(int)character->frame], NULL, &characterRect);
+  int bottom = height * 0.705;
 
   // Gravidade 
   if (character->y < bottom) {
@@ -64,8 +61,12 @@ void character_animate(Character character, SDL_Renderer* renderer, int width, i
   } else if (character->frame >= 12) {
     character->frame = 0;
   } else {
-    character->frame += 0.15;
+    character->frame += 0.12;
   }
+
+  SDL_Rect characterRect = { character->x, character->y, character->height, character->height };
+  SDL_RenderCopy(renderer, character->animation[(int) character->frame], NULL, &characterRect);
+
 }
 
 void character_jump(Character character, int height)
