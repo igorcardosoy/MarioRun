@@ -23,8 +23,6 @@ void game_init(Game* game)
     (*game)->speed = 1;
     (*game)->score = 0;
 
-    SDL_Init(SDL_INIT_VIDEO);
-
     (*game)->window = SDL_CreateWindow("Mario Run", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 760, 540, SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
     (*game)->renderer = SDL_CreateRenderer((*game)->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 

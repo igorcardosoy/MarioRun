@@ -10,10 +10,6 @@ struct text_type {
 
 void text_init(Text* text)
 {
-  if (TTF_Init() < 0) {
-    printf("TTF_Init: %s\n", TTF_GetError());
-    exit(1);
-  }
 
   *text = malloc(sizeof(struct text_type));
   if (*text != NULL) {
