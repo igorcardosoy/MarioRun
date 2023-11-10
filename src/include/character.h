@@ -11,6 +11,9 @@ void character_animate(Character character, SDL_Renderer* renderer, int width, i
 // Função para fazer com que o personagem pule, sendo que, a altura do pula sera baseado no height atual da tela, recebendo como argumento o personagem e a altura.
 void character_jump(Character character, int height);
 
+// Função para fazer com que o personagem morra ou volte a vida.
+void character_set_dead(Character character);
+
 // Função para fazer com que o personagem agache ou caso esteja no ar ele caia mais rapido, sendo que, a altura do agacha sera baseado no height atual da tela, recebendo como argumento o personagem e a altura.
 void character_fall(Character character, int height);
 

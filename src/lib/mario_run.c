@@ -10,6 +10,8 @@ struct game_type {
   double speed;
   double score;
 
+  Mix_Music* main_song;
+
   SDL_Renderer* renderer;
   SDL_Window* window;
 
@@ -18,6 +20,12 @@ struct game_type {
 
 void game_init(Game* game)
 {
+
+  Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
+  (*game)->main_song = Mix_LoadMUS("./src/assets/audios/music.mp3");
+
+  Mix_PlayMusic((*game)->main_song, -1);
+
   *game = malloc(sizeof(struct game_type));
   if (*game != NULL) {
     (*game)->speed = 1;
@@ -136,6 +144,7 @@ void game_run(Game game, bool* quit)
     *quit = game_events(game);
 
     if (are_colliding(game->character, game->obstacle) && !*quit) {
+      character_set_dead(game->character, true);
       *quit = game_menu(game, true);
       game_reset(game);
     }

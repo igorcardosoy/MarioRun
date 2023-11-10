@@ -9,10 +9,16 @@ struct character_type {
   bool is_dead;
   SDL_Texture* animation[12];
   SDL_Texture* texture_dead;
+  Mix_Chunk* death_sound;
+  Mix_Chunk* jump_sound;
 };
 
 void character_init(Character* character, SDL_Renderer* renderer, int width, int height)
 {
+
+  (*character)->death_sound = Mix_LoadWAV("./audios/death_sound.mp3");
+  (*character)->jump_sound = Mix_LoadWAV("./audios/jump_sound.mp3");
+
   *character = malloc(sizeof(struct character_type));
 
   if (*character != NULL) {
@@ -71,12 +77,27 @@ void character_animate(Character character, SDL_Renderer* renderer, int width, i
 
 void character_jump(Character character, int height)
 {
-  //not implemented
+  
+
+
+
+  Mix_PlayChannel(-1, character->jump_sound, 0);
 }
 
 void character_fall(Character character, int height)
 {
   //not implemented
+}
+
+void character_set_dead(Character character, bool is_dead)
+{
+  if (is_dead)
+  {
+    Mix_PlayChannel(-1, character->death_sound, 0);
+    character->is_dead = true;
+  } else {
+    character->is_dead = false;
+  }
 }
 
 void character_get_colision(Character character, double* x1, double* x2, double* y1, double* y2)
