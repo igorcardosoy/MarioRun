@@ -23,9 +23,9 @@ void sky_animate(Sky sky, SDL_Renderer* renderer, int width, int height, double 
   sky->height = height;
   sky->width = width;
 
-  sky->x -= speed;
-  if (sky->x <= (-width-speed)) {
-    sky->x = 0+speed;
+  sky->x -= (speed / 2);
+  if (sky->x < -sky->width) {
+    sky->x = sky->width * 0.018;
   }
 
   SDL_SetRenderDrawColor(renderer, 94, 145, 254, 255);
