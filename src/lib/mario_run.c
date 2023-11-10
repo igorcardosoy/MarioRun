@@ -192,4 +192,5 @@ void game_destroy(Game* game)
   SDL_DestroyRenderer((*game)->renderer);
 
   free(*game);
+  SDL_Quit();
 }
