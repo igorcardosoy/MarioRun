@@ -8,7 +8,7 @@ struct game_type {
   Queue queue;
   Text text;
   double speed;
-  int score;
+  double score;
 
   SDL_Renderer* renderer;
   SDL_Window* window;
@@ -20,9 +20,9 @@ void game_init(Game* game)
 {
   *game = malloc(sizeof(struct game_type));
   if (*game != NULL) {
-    (*game)->speed = 1;
+    (*game)->speed = 2;
     (*game)->score = 0;
-  
+
     SDL_Init(SDL_INIT_VIDEO);
 
     (*game)->window = SDL_CreateWindow("Mario Run", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 0, 0, SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
@@ -40,14 +40,13 @@ void game_init(Game* game)
 
     srand(time(NULL));
 
-    for (int i = 0; i < 9; i++)
-    {
+    for (int i = 0; i < 9; i++) {
       int type = (rand() % 10) + 1;
 
-      obstacle_init(&(*game)->obstacle,(*game)->renderer, (*game)->width, (*game)->height, type);
+      obstacle_init(&(*game)->obstacle, (*game)->renderer, (*game)->width, (*game)->height, type);
       queue_enqueue((*game)->queue, (*game)->obstacle);
     }
-    
+
   }
 }
 
@@ -72,20 +71,21 @@ void game_animate(Game game)
     obstacle_set_position_x(game->obstacle, game->width + obstacle_get_width(game->obstacle));
 
     int type = (rand() % 10) + 1;
-    obstacle_init(&game->obstacle,game->renderer , game->width, game->height, type);
+    obstacle_init(&game->obstacle, game->renderer, game->width, game->height, type);
     queue_enqueue(game->queue, game->obstacle);
 
     game->obstacle = queue_dequeue(game->queue);
   }
 
-  game->score += 0.25 * game->speed;
+  game->score += 0.01 * game->speed;
 
-  if (game->score % 100 == 0) {
-    game->speed += 0.15;
+  if ((int)game->score % 100 == 0 && game->score < 1500) {
+    game->speed += 0.25;
+    printf("Velociade atual: %f\n", game->speed); //DEBUG
   }
 
   char score[10];
-  snprintf(score, 10, "%d", game->score);
+  snprintf(score, 10, "%d", (int)game->score);
   text_render(game->text, game->renderer, 0, 0, game->width, game->height, "src/assets/fonts/font.ttf", 50, score);
 
   SDL_RenderPresent(game->renderer);
