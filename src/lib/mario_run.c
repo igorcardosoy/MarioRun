@@ -20,7 +20,7 @@ void game_init(Game* game)
 {
   *game = malloc(sizeof(struct game_type));
   if (*game != NULL) {
-    (*game)->speed = 2;
+    (*game)->speed = 1;
     (*game)->score = 0;
 
     SDL_Init(SDL_INIT_VIDEO);
@@ -80,7 +80,7 @@ void game_animate(Game game)
   game->score += 0.01 * game->speed;
 
   if ((int)game->score % 100 == 0 && game->score < 1500) {
-    game->speed += 0.25;
+    game->speed += 0.20;
     printf("Velociade atual: %f\n", game->speed); //DEBUG
   }
 

@@ -25,8 +25,8 @@ void ground_animate(Ground ground, SDL_Renderer* renderer, int width, int height
   ground->width = width;
 
   ground->x -= speed;
-  if (ground->x <= -width-speed) {
-    ground->x = 0;
+  if (ground->x < -ground->width) {
+    ground->x = -ground->width * 0.018;
   }
 
   SDL_Rect rect = { ground->x, ground->y, ground->width * 2, ground->height };
