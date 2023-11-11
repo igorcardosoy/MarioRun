@@ -188,7 +188,7 @@ void game_destroy(Game* game)
   sky_destroy(&(*game)->sky);
   ground_destroy(&(*game)->ground);
   character_destroy(&(*game)->character);
-  obstacle_destroy(&(*game)->obstacle);
+  // obstacle_destroy(&(*game)->obstacle);
   queue_destroy(&(*game)->queue);
   text_destroy(&(*game)->text);
 
@@ -197,7 +197,7 @@ void game_destroy(Game* game)
   SDL_DestroyRenderer((*game)->renderer);
   
   free(*game);
-  
+
   Mix_Quit();
   IMG_Quit();
   TTF_Quit();
