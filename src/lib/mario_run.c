@@ -107,12 +107,10 @@ bool game_events(Game game)
 
   while (SDL_PollEvent(&event)) {
     switch (event.type) {
-      case SDL_WINDOWEVENT_CLOSE:
-        if (game->window) {
+      case SDL_QUIT:
           SDL_DestroyWindow(game->window);
           game->window = NULL;
           stop = true;
-        }
         break;
       case SDL_KEYDOWN:
         switch (event.key.keysym.sym) {
