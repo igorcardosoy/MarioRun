@@ -21,7 +21,7 @@ struct game_type {
 void game_init(Game* game)
 {
   *game = malloc(sizeof(struct game_type));
-  
+
   if (*game != NULL) {
 
     SDL_Init(SDL_INIT_VIDEO);
@@ -31,11 +31,11 @@ void game_init(Game* game)
 
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
 
-    (*game)->speed = 1;
+    (*game)->speed = 2;
     (*game)->score = 0;
 
     (*game)->window = SDL_CreateWindow("Mario Run", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 760, 540, SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
-    (*game)->renderer = SDL_CreateRenderer((*game)->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    (*game)->renderer = SDL_CreateRenderer((*game)->window, -1, SDL_RENDERER_ACCELERATED);
 
     SDL_GetWindowSize((*game)->window, &(*game)->width, &(*game)->height);
 
@@ -74,7 +74,7 @@ void game_animate(Game game)
 
   sky_animate(game->sky, game->renderer, game->width, game->height, game->speed);
   ground_animate(game->ground, game->renderer, game->width, game->height, game->speed);
-  character_animate(game->character, game->renderer, game->width, game->height);
+  character_animate(game->character, game->renderer, game->width, game->height, game->speed);
 
   // obstacle_animate(game->obstacle, game->renderer, game->width, game->height, game->speed);
   // if (obstacle_get_position_x(game->obstacle) == -obstacle_get_width(game->obstacle)) {
@@ -87,15 +87,15 @@ void game_animate(Game game)
   //   game->obstacle = queue_dequeue(game->queue);
   // }
 
-  game->score += 0.01 * game->speed;
+  game->score += 0.015 * game->speed;
 
-  if ((int)game->score % 100 == 0 && game->score < 1500) {
-    game->speed += 0.20;
+  if (((int)game->score) % 100 == 0 && game->score < 1800) {
+    game->speed += 0.1;
   }
 
   char score[10];
   snprintf(score, 10, "%d", (int)game->score);
-  text_render(game->text, game->renderer, 0, 0, game->width, game->height, "src/assets/fonts/font.ttf", 50, score);
+  text_render(game->text, game->renderer, game->width * 0.85, 0, game->width, game->height, "src/assets/fonts/font.ttf", 50, score);
 
   SDL_RenderPresent(game->renderer);
 }
@@ -141,11 +141,17 @@ bool game_events(Game game)
 void game_run(Game game, bool* quit)
 {
 
+  int frame_time;
+  int startLoop;
+  
   Mix_PlayMusic(game->main_song, -1);
 
   game_menu(game, false);
 
   while (!*quit) {
+
+    startLoop = SDL_GetTicks();
+
     game_animate(game);
     *quit = game_events(game);
 
@@ -154,6 +160,11 @@ void game_run(Game game, bool* quit)
     //   *quit = game_menu(game, true);
     //   game_reset(game);
     // }
+
+    frame_time = SDL_GetTicks() - startLoop;
+    if (frame_time < FRAME_TIME) {
+      SDL_Delay(FRAME_TIME - frame_time);
+    }
   }
 
   game_destroy(&game);

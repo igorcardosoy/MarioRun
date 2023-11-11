@@ -28,7 +28,7 @@ void character_init(Character* character, SDL_Renderer* renderer, int width, int
     (*character)->width = width * 0.15;
     (*character)->height = height * 0.15;
     (*character)->speed = 0;
-    (*character)->gravity = 0.2;
+    (*character)->gravity = 0.3;
     (*character)->frame = 0;
     (*character)->is_dead = false;
     (*character)->texture_dead = IMG_LoadTexture(renderer, "assets/images/mario_dead.png");
@@ -45,7 +45,7 @@ void character_init(Character* character, SDL_Renderer* renderer, int width, int
   }
 }
 
-void character_animate(Character character, SDL_Renderer* renderer, int width, int height)
+void character_animate(Character character, SDL_Renderer* renderer, int width, int height, int speed)
 {
   character->width = (width * 0.15);
   character->height = (height * 0.15);
@@ -68,7 +68,7 @@ void character_animate(Character character, SDL_Renderer* renderer, int width, i
   } else if (character->frame >= 12) {
     character->frame = 0;
   } else {
-    character->frame += 0.12;
+    character->frame += (speed * 0.02);
   }
 
   SDL_Rect characterRect = { character->x, character->y, character->height, character->height };

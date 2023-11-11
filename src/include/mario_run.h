@@ -6,6 +6,9 @@
 #include "./character.h"   
 #include "./text.h"
 
+#define FRAME_RATE 144
+#define FRAME_TIME 1000 / FRAME_RATE
+
 typedef struct game_type* Game;
 
 // Inicializa o jogo (game).

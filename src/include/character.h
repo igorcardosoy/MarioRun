@@ -6,7 +6,7 @@ typedef struct character_type* Character;
 void character_init(Character* character, SDL_Renderer* renderer, int width, int height);
 
 // Função que detem o poder de desenhar o personagem na tela, sendo assim responsavel por animar o personagem e definir as animacoes caso o persona esteja pulando ou esteja agachado, e define tambem a gravidade do personagem. Recebe como argumento o personagem, o renderer e window.
-void character_animate(Character character, SDL_Renderer* renderer, int width, int height);
+void character_animate(Character character, SDL_Renderer* renderer, int width, int height, int speed);
 
 // Função para fazer com que o personagem pule, sendo que, a altura do pula sera baseado no height atual da tela, recebendo como argumento o personagem e a altura.
 void character_jump(Character character, int height);
