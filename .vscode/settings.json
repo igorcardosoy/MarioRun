@@ -1,8 +1,0 @@
-{
-    "files.associations": {
-        "*.c": "c",
-        "sdl.h": "c",
-        "sdl_ttf.h": "c",
-        "utils.h": "c"
-    }
-}
