@@ -17,6 +17,9 @@ void game_init(Game* game);
 // Mostra o menu na tela.
 bool game_menu(Game game, bool is_dead);
 
+// Pausa o jogo e oferece algumas opções.
+void game_pause(Game game);
+
 // Anima o jogo e todos os seus elementos.
 void game_animate(Game game);
 

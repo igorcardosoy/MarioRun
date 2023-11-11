@@ -115,7 +115,7 @@ bool game_events(Game game)
       case SDL_KEYDOWN:
         switch (event.key.keysym.sym) {
           case SDLK_ESCAPE:
-            stop = true;
+            game_pause(game);
             break;
           case SDLK_UP:
           case SDLK_SPACE:
@@ -126,14 +126,16 @@ bool game_events(Game game)
             character_fall(game->character, game->height);
             stop = true;
             break;
-          case SDL_QUIT:
-            stop = true;
-            break;
         }
     }
   }
 
   return stop;
+}
+
+void game_pause(Game game)
+{
+  //not implemented
 }
 
 void game_run(Game game, bool* quit)
