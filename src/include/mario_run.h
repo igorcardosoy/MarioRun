@@ -1,4 +1,4 @@
-#include "./main.h"
+#include "./utils.h"
 #include "./obstacle.h"
 #include "./queue.h"
 #include "./sky.h"

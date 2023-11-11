@@ -1,4 +1,4 @@
-#include "./main.h"
+#include "./utils.h"
 
 typedef struct text_type* Text;
 
