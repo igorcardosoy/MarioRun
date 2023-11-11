@@ -5,7 +5,7 @@ Este repositório contém o código fonte e a documentação para o jogo Mario R
 
 ## Descrição do jogo:
 
-Mario Run é uma emocionante recriação do famoso jogo "Google Dino Run", inserida no envolvente universo dos jogos do Mario. Nesta versão, o jogador assume o controle de Mario, o icônico encanador bigodudo, enquanto ele corre pelo ambiente de Super Mario Bros. Seu objetivo é pular sobre canos, evitar perigos e desafios, tudo isso para alcançar a maior pontuação possível. 
+Mario Run é uma emocionante recriação do famoso jogo "Google Dino Run", inserida no envolvente universo dos jogos do Mario. Nesta versão, o jogador assume o controle de Mario, o icônico encanador bigodudo, enquanto ele corre pelo ambiente de Super Mario Bros. Seu objetivo é pular sobre canos, evitar perigos e desafios, tudo isso para alcançar a maior pontuação possível.  
 
 
 ## Como jogar?
