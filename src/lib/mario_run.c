@@ -27,9 +27,7 @@ void game_init(Game* game)
   TTF_Init();
 
   Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
-  (*game)->main_song = Mix_LoadMUS("./src/assets/audios/music.mp3");
-
-  Mix_PlayMusic((*game)->main_song, -1);
+  // (*game)->main_song = Mix_LoadMUS("./src/assets/audios/music.mp3");
 
   *game = malloc(sizeof(struct game_type));
   if (*game != NULL) {
@@ -44,19 +42,17 @@ void game_init(Game* game)
     sky_init(&(*game)->sky, (*game)->renderer, (*game)->width, (*game)->height);
     ground_init(&(*game)->ground, (*game)->renderer, (*game)->width, (*game)->height);
     character_init(&(*game)->character, (*game)->renderer, (*game)->width, (*game)->height);
-    queue_init(&(*game)->queue);
     text_init(&(*game)->text);
 
-    queue_init(&(*game)->queue);
+    // queue_init(&(*game)->queue);
+    // srand(time(NULL));
 
-    srand(time(NULL));
+    // for (int i = 0; i < 9; i++) {
+    //   int type = (rand() % 10) + 1;
 
-    for (int i = 0; i < 9; i++) {
-      int type = (rand() % 10) + 1;
-
-      obstacle_init(&(*game)->obstacle, (*game)->renderer, (*game)->width, (*game)->height, type);
-      queue_enqueue((*game)->queue, (*game)->obstacle);
-    }
+    //   obstacle_init(&(*game)->obstacle, (*game)->renderer, (*game)->width, (*game)->height, type);
+    //   queue_enqueue((*game)->queue, (*game)->obstacle);
+    // }
 
   }
 }
@@ -77,16 +73,16 @@ void game_animate(Game game)
   ground_animate(game->ground, game->renderer, game->width, game->height, game->speed);
   character_animate(game->character, game->renderer, game->width, game->height);
 
-  obstacle_animate(game->obstacle, game->renderer, game->width, game->height, game->speed);
-  if (obstacle_get_position_x(game->obstacle) == -obstacle_get_width(game->obstacle)) {
-    obstacle_set_position_x(game->obstacle, game->width + obstacle_get_width(game->obstacle));
+  // obstacle_animate(game->obstacle, game->renderer, game->width, game->height, game->speed);
+  // if (obstacle_get_position_x(game->obstacle) == -obstacle_get_width(game->obstacle)) {
+  //   obstacle_set_position_x(game->obstacle, game->width + obstacle_get_width(game->obstacle));
 
-    int type = (rand() % 10) + 1;
-    obstacle_init(&game->obstacle, game->renderer, game->width, game->height, type);
-    queue_enqueue(game->queue, game->obstacle);
+  //   int type = (rand() % 10) + 1;
+  //   obstacle_init(&game->obstacle, game->renderer, game->width, game->height, type);
+  //   queue_enqueue(game->queue, game->obstacle);
 
-    game->obstacle = queue_dequeue(game->queue);
-  }
+  //   game->obstacle = queue_dequeue(game->queue);
+  // }
 
   game->score += 0.01 * game->speed;
 
@@ -142,17 +138,19 @@ bool game_events(Game game)
 void game_run(Game game, bool* quit)
 {
 
+  // Mix_PlayMusic(game->main_song, -1);
+
   game_menu(game, false);
 
   while (!*quit) {
     game_animate(game);
     *quit = game_events(game);
 
-    if (are_colliding(game->character, game->obstacle) && !*quit) {
-      character_set_dead(game->character, true);
-      *quit = game_menu(game, true);
-      game_reset(game);
-    }
+    // if (are_colliding(game->character, game->obstacle) && !*quit) {
+    //   character_set_dead(game->character, true);
+    //   *quit = game_menu(game, true);
+    //   game_reset(game);
+    // }
   }
 
   game_destroy(&game);

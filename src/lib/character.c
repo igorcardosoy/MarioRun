@@ -16,8 +16,8 @@ struct character_type {
 void character_init(Character* character, SDL_Renderer* renderer, int width, int height)
 {
 
-  (*character)->death_sound = Mix_LoadWAV("./audios/death_sound.mp3");
-  (*character)->jump_sound = Mix_LoadWAV("./audios/jump_sound.mp3");
+  // (*character)->death_sound = Mix_LoadWAV("./audios/death_sound.mp3");
+  // (*character)->jump_sound = Mix_LoadWAV("./audios/jump_sound.mp3");
 
   *character = malloc(sizeof(struct character_type));
 
@@ -30,6 +30,7 @@ void character_init(Character* character, SDL_Renderer* renderer, int width, int
     (*character)->gravity = 0.2;
     (*character)->frame = 0;
     (*character)->is_dead = false;
+    (*character)->texture_dead = IMG_LoadTexture(renderer, "assets/images/mario_dead.png");
 
     for (int i = 0; i < 12; i++) {
       char path[50];
@@ -40,7 +41,6 @@ void character_init(Character* character, SDL_Renderer* renderer, int width, int
         printf("Erro ao carregar textura do personagem!\n");
       }
     }
-    (*character)->texture_dead = IMG_LoadTexture(renderer, "assets/images/mario_dead.png");
   }
 }
 
