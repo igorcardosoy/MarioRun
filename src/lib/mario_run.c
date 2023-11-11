@@ -20,17 +20,17 @@ struct game_type {
 
 void game_init(Game* game)
 {
-
-  SDL_Init(SDL_INIT_VIDEO);
-  IMG_Init(IMG_INIT_PNG);
-  Mix_Init(MIX_INIT_MP3);
-  TTF_Init();
-
-  Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
-  // (*game)->main_song = Mix_LoadMUS("./src/assets/audios/music.mp3");
-
   *game = malloc(sizeof(struct game_type));
+  
   if (*game != NULL) {
+
+    SDL_Init(SDL_INIT_VIDEO);
+    IMG_Init(IMG_INIT_PNG);
+    Mix_Init(MIX_INIT_MP3);
+    TTF_Init();
+
+    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
+
     (*game)->speed = 1;
     (*game)->score = 0;
 
@@ -38,6 +38,9 @@ void game_init(Game* game)
     (*game)->renderer = SDL_CreateRenderer((*game)->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     SDL_GetWindowSize((*game)->window, &(*game)->width, &(*game)->height);
+
+
+    (*game)->main_song = Mix_LoadMUS("./src/assets/audios/musica_tema.mp3");
 
     sky_init(&(*game)->sky, (*game)->renderer, (*game)->width, (*game)->height);
     ground_init(&(*game)->ground, (*game)->renderer, (*game)->width, (*game)->height);
@@ -138,7 +141,7 @@ bool game_events(Game game)
 void game_run(Game game, bool* quit)
 {
 
-  // Mix_PlayMusic(game->main_song, -1);
+  Mix_PlayMusic(game->main_song, -1);
 
   game_menu(game, false);
 
@@ -195,7 +198,7 @@ void game_destroy(Game* game)
   Mix_CloseAudio();
   SDL_DestroyWindow((*game)->window);
   SDL_DestroyRenderer((*game)->renderer);
-  
+
   free(*game);
 
   Mix_Quit();

@@ -16,12 +16,13 @@ struct character_type {
 void character_init(Character* character, SDL_Renderer* renderer, int width, int height)
 {
 
-  // (*character)->death_sound = Mix_LoadWAV("./audios/death_sound.mp3");
-  // (*character)->jump_sound = Mix_LoadWAV("./audios/jump_sound.mp3");
-
   *character = malloc(sizeof(struct character_type));
 
   if (*character != NULL) {
+
+    (*character)->death_sound = Mix_LoadWAV("./audios/mario_morreu.mp3");
+    (*character)->jump_sound = Mix_LoadWAV("./audios/mario_pulo_alto.mp3");
+
     (*character)->x = width * 0.1;
     (*character)->y = 0;
     (*character)->width = width * 0.15;
