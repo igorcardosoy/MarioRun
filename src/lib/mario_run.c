@@ -191,9 +191,16 @@ void game_destroy(Game* game)
   obstacle_destroy(&(*game)->obstacle);
   queue_destroy(&(*game)->queue);
   text_destroy(&(*game)->text);
+
+  Mix_CloseAudio();
   SDL_DestroyWindow((*game)->window);
   SDL_DestroyRenderer((*game)->renderer);
-
+  
   free(*game);
+  
+  Mix_Quit();
+  IMG_Quit();
+  TTF_Quit();
+  TTF_Quit();
   SDL_Quit();
 }

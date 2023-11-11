@@ -29,6 +29,7 @@ void text_render(Text text, SDL_Renderer* renderer, int x, int y, int width, int
 void text_destroy(Text* text)
 {
   SDL_DestroyTexture((*text)->texture);
+  SDL_FreeSurface((*text)->surface);
   TTF_CloseFont((*text)->font);
   free(*text);
 }

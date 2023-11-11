@@ -54,5 +54,6 @@ void obstacle_get_colision(Obstacle obstacle, double* x1, double* x2, double* y1
 
 void obstacle_destroy(Obstacle* obstacle)
 {
-  //not implemented
+  SDL_DestroyTexture((*obstacle)->texture);
+  free(*obstacle);
 }
