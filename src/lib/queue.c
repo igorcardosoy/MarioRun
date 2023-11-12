@@ -7,7 +7,7 @@ struct queue_type {
 
 void queue_init(Queue* queue)
 {
-  *queue = malloc(sizeof(Queue));
+  *queue = malloc(sizeof(struct queue_type));
   (*queue)->armazenados = -1;
 }
 
@@ -25,7 +25,7 @@ bool queue_enqueue(Queue queue, Element new_element)
 {
   bool feedback = false;
 
-  if(!queue_is_full(queue)){
+  if (!queue_is_full(queue)) {
     queue->armazenados++;
     queue->obstaculos[queue->armazenados] = new_element;
     feedback = true;
@@ -38,12 +38,11 @@ Element queue_dequeue(Queue queue)
 {
   Element removed = NULL;
 
-  if(!queue_is_empty(queue)){
+  if (!queue_is_empty(queue)) {
     removed = queue->obstaculos[0];
     queue->armazenados--;
 
-    for (int i = 0; i < queue->armazenados; i++)
-    {
+    for (int i = 0; i < queue->armazenados; i++) {
       queue->obstaculos[i] = queue->obstaculos[i + 1];
     }
   }
@@ -56,8 +55,8 @@ bool queue_destroy(Queue* queue)
   Element trash_collector;
   bool feedback = false;
 
-  if(!queue_is_empty){
-    while(!queue_is_empty(*queue)){
+  if (!queue_is_empty) {
+    while (!queue_is_empty(*queue)) {
       trash_collector = queue_dequeue(*queue);
     }
 

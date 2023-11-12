@@ -10,7 +10,6 @@ struct text_type {
 
 void text_init(Text* text)
 {
-
   *text = malloc(sizeof(struct text_type));
   if (*text != NULL) {
     (*text)->color = (SDL_Color){ 255, 255, 255, 255 };
@@ -19,7 +18,7 @@ void text_init(Text* text)
 
 void text_render(Text text, SDL_Renderer* renderer, int x, int y, int width, int height, char* font, int size, char* text_to_render)
 {
-  text->rect = (SDL_Rect){ x, y, width*0.10, height*0.10 };
+  text->rect = (SDL_Rect){ x, y, width * 0.10, height * 0.10 };
   text->font = TTF_OpenFont(font, size);
   text->surface = TTF_RenderText_Solid(text->font, text_to_render, text->color);
   text->texture = SDL_CreateTextureFromSurface(renderer, text->surface);

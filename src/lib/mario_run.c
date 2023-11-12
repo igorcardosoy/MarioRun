@@ -120,7 +120,6 @@ bool game_events(Game game)
           case SDLK_UP:
           case SDLK_SPACE:
             character_jump(game->character, game->height);
-            stop = true;
             break;
           case SDLK_DOWN:
             character_fall(game->character, game->height);

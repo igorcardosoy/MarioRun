@@ -30,7 +30,7 @@ void sky_animate(Sky sky, SDL_Renderer* renderer, int width, int height, double 
 
   SDL_SetRenderDrawColor(renderer, 94, 145, 254, 255);
 
-  SDL_Rect rect = { sky->x, sky->y-(height*0.5)+(height * 0.15), sky->width * 2, sky->height};
+  SDL_Rect rect = { sky->x, sky->y - (height * 0.5) + (height * 0.15), sky->width * 2, sky->height };
   SDL_RenderCopy(renderer, sky->texture, NULL, &rect);
 }
 

@@ -11,8 +11,8 @@ void obstacle_init(Obstacle* obstacle, SDL_Renderer* renderer, int width, int he
   *obstacle = malloc(sizeof(struct obstacle_type));
 
   if (*obstacle != NULL) {
-    (*obstacle)->x = //not implemented;
-    (*obstacle)->y = //not implemented;
+    // (*obstacle)->x = not implemented;
+    // (*obstacle)->y = not implemented;
     (*obstacle)->width = width;
     (*obstacle)->height = height;
 

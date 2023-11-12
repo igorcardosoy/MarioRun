@@ -78,10 +78,6 @@ void character_animate(Character character, SDL_Renderer* renderer, int width, i
 
 void character_jump(Character character, int height)
 {
-  
-
-
-
   Mix_PlayChannel(-1, character->jump_sound, 0);
 }
 
