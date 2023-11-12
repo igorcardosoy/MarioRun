@@ -31,17 +31,24 @@ void obstacle_animate(Obstacle obstacle, SDL_Renderer* renderer, int width, int 
 
 int obstacle_get_position_x(Obstacle obstacle)
 {
-  //not implemented
+  if (obstacle != NULL)
+    return obstacle->x;
+  
+  return NULL;
 }
 
 void obstacle_set_position_x(Obstacle obstacle, int x)
 {
-  //not implemented
+  if (obstacle != NULL)
+    obstacle->x = x;
 }
 
 int obstacle_get_width(Obstacle obstacle)
 {
-  //not implemented
+  if (obstacle != NULL)
+    return obstacle->width;
+
+  return NULL;
 }
 
 void obstacle_get_colision(Obstacle obstacle, double* x1, double* x2, double* y1, double* y2)
