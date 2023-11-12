@@ -2,34 +2,67 @@
 
 struct queue_type {
   Element obstaculos[QUEUE_MAX_SIZE];
+  int armazenados;
 };
 
 void queue_init(Queue* queue)
 {
-  //not implemented
+  *queue = malloc(sizeof(Queue));
+  (*queue)->armazenados = -1;
 }
 
 bool queue_is_full(Queue queue)
 {
-  //not implemented
+  return queue->armazenados == QUEUE_MAX_SIZE - 1;
 }
 
 bool queue_is_empty(Queue queue)
 {
-  //not implemented
+  return queue->armazenados == -1;
 }
 
 bool queue_enqueue(Queue queue, Element new_element)
 {
-  //not implemented
+  bool feedback = false;
+
+  if(!queue_is_full(queue)){
+    queue->armazenados++;
+    queue->obstaculos[queue->armazenados] = new_element;
+    feedback = true;
+  }
+
+  return feedback;
 }
 
 Element queue_dequeue(Queue queue)
 {
-  //not implemented
+  Element removed = NULL;
+
+  if(!queue_is_empty(queue)){
+    removed = queue->obstaculos[0];
+    queue->armazenados--;
+
+    for (int i = 0; i < queue->armazenados; i++)
+    {
+      queue->obstaculos[i] = queue->obstaculos[i + 1];
+    }
+  }
+
+  return removed;
 }
 
 bool queue_destroy(Queue* queue)
 {
-  //not implemented
+  Element trash_collector;
+  bool feedback = false;
+
+  if(!queue_is_empty){
+    while(!queue_is_empty(*queue)){
+      trash_collector = queue_dequeue(*queue);
+    }
+
+    feedback = true;
+  }
+
+  return feedback;
 }

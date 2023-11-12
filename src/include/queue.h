@@ -16,7 +16,7 @@ typedef Obstacle Element;
  * struct queue. Independente da definição da struct
  * o TAD deve atender as especificações apontadas.
 */
-typedef struct queue* Queue;
+typedef struct queue_type* Queue;
 
 
 /**
