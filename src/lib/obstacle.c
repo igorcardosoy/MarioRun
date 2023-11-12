@@ -26,7 +26,13 @@ void obstacle_init(Obstacle* obstacle, SDL_Renderer* renderer, int width, int he
 
 void obstacle_animate(Obstacle obstacle, SDL_Renderer* renderer, int width, int height, double speed)
 {
-  //not implemented
+  if (obstacle != NULL)
+  {
+    obstacle->x -= speed;
+    if (obstacle->x < -obstacle->width) {
+      obstacle->x = -obstacle->width * 0.018;
+    }
+  }
 }
 
 int obstacle_get_position_x(Obstacle obstacle)
