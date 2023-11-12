@@ -23,6 +23,9 @@ void game_pause(Game game);
 // Anima o jogo e todos os seus elementos.
 void game_animate(Game game);
 
+// Desenha um frame do jogo na tela.
+void game_frame(Game game, bool* quit);
+
 // Detecta os eventos do jogo, como teclas.
 bool game_events(Game game);
 

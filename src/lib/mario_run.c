@@ -108,26 +108,28 @@ bool game_events(Game game)
   while (SDL_PollEvent(&event)) {
     switch (event.type) {
       case SDL_QUIT:
-          SDL_DestroyWindow(game->window);
-          game->window = NULL;
-          stop = true;
+        SDL_DestroyWindow(game->window);
+        game->window = NULL;
+        stop = true;
         break;
       case SDL_KEYDOWN:
         switch (event.key.keysym.sym) {
           case SDLK_ESCAPE:
             game_pause(game);
             break;
-          case SDLK_UP:
-          case SDLK_SPACE:
-            character_jump(game->character, game->height);
-            break;
-          case SDLK_DOWN:
-            character_fall(game->character, game->height);
-            stop = true;
-            break;
         }
     }
   }
+
+  // const Uint8* state = SDL_GetKeyboardState(NULL);
+  // if (state[SDL_SCANCODE_DOWN]) {
+  //   character_fall(game->character, game->height);
+  //   game_animate(game);
+  // }
+  // if (state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_SPACE]) {
+  //     character_jump(game->character, game->height);
+  //     game_animate(game);
+  // }
 
   return stop;
 }
@@ -140,33 +142,37 @@ void game_pause(Game game)
 void game_run(Game game, bool* quit)
 {
 
-  int frame_time;
-  int startLoop;
-  
   Mix_PlayMusic(game->main_song, -1);
 
   game_menu(game, false);
 
   while (!*quit) {
-
-    startLoop = SDL_GetTicks();
-
-    game_animate(game);
-    *quit = game_events(game);
-
-    // if (are_colliding(game->character, game->obstacle) && !*quit) {
-    //   character_set_dead(game->character, true);
-    //   *quit = game_menu(game, true);
-    //   game_reset(game);
-    // }
-
-    frame_time = SDL_GetTicks() - startLoop;
-    if (frame_time < FRAME_TIME) {
-      SDL_Delay(FRAME_TIME - frame_time);
-    }
+    game_frame(game, quit);
   }
 
   game_destroy(&game);
+}
+
+void game_frame(Game game, bool* quit)
+{
+  int frame_time;
+  int startLoop;
+
+  startLoop = SDL_GetTicks();
+
+  game_animate(game);
+  *quit = game_events(game);
+
+  // if (are_colliding(game->character, game->obstacle) && !*quit) {
+  //   character_set_dead(game->character, true);
+  //   *quit = game_menu(game, true);
+  //   game_reset(game);
+  // }
+
+  frame_time = SDL_GetTicks() - startLoop;
+  if (frame_time < FRAME_TIME) {
+    SDL_Delay(FRAME_TIME - frame_time);
+  }
 }
 
 void game_reset(Game game)

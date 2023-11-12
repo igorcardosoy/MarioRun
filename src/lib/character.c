@@ -3,6 +3,7 @@
 struct character_type {
   int x, y;
   int width, height;
+  int bottom;
   double gravity;
   double speed;
   double frame;
@@ -49,21 +50,21 @@ void character_animate(Character character, SDL_Renderer* renderer, int width, i
 {
   character->width = (width * 0.15);
   character->height = (height * 0.15);
-  int bottom = height * 0.705;
+  character->bottom = height * 0.705;
 
   // Gravidade 
-  if (character->y < bottom) {
+  if (character->y < character->bottom) {
     character->speed += character->gravity;
     character->y += character->speed;
-    if (character->y == bottom) {
+    if (character->y == character->bottom) {
       character->speed = 0;
     }
   }
-  if (character->y > bottom)
-    character->y = bottom;
+  if (character->y > character->bottom)
+    character->y = character->bottom;
 
   // Reset da animação.
-  if (character->y < bottom) {
+  if (character->y < character->bottom) {
     character->frame = 5;
   } else if (character->frame >= 12) {
     character->frame = 0;
@@ -78,12 +79,19 @@ void character_animate(Character character, SDL_Renderer* renderer, int width, i
 
 void character_jump(Character character, int height)
 {
+  if (character->y == character->bottom) {
+    character->y -= height * 0.02;
+  }
   Mix_PlayChannel(-1, character->jump_sound, 0);
 }
 
 void character_fall(Character character, int height)
 {
-  //not implemented
+  if (character->bottom < height * 0.705)
+  {
+    character->y += height * 0.02;
+  }
+  
 }
 
 void character_set_dead(Character character, bool is_dead)

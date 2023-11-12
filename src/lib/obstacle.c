@@ -40,7 +40,7 @@ int obstacle_get_position_x(Obstacle obstacle)
   if (obstacle != NULL)
     return obstacle->x;
   
-  return NULL;
+  return -1;
 }
 
 void obstacle_set_position_x(Obstacle obstacle, int x)
@@ -54,7 +54,7 @@ int obstacle_get_width(Obstacle obstacle)
   if (obstacle != NULL)
     return obstacle->width;
 
-  return NULL;
+  return -1;
 }
 
 void obstacle_get_colision(Obstacle obstacle, double* x1, double* x2, double* y1, double* y2)
