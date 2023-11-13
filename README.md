@@ -16,7 +16,11 @@ Para jogar o Mario Run, siga as instruções abaixo:
 ...
 
 ### 2. Compilar e Instalar:
-...
+
+Para Windowns:
+ gcc -std=c99 -o MarioRun-win64.exe ./src/main.c ./src/lib/*c -I ./SDL2/include -L ./SDL2/lib/ -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
+Para Linux:
+ gcc -o MarioRun-linux ./src/main.c ./src/lib/*c -ldl -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
 
 ### 3. Executar:
 ...
