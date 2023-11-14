@@ -123,14 +123,18 @@ bool game_events(Game game)
             if (character_can_jump(game->character) && !character_is_crouched(game->character)) {
               character_jump_sound(game->character);
               int jump_size = game->height * 0.04;
-              for (int i = 0; i < jump_size; i++) {
+
+              character_jump(game->character);
+              game_frame(game, &stop);
+
+              for (int i = 0; i < jump_size && !character_can_jump(game->character); i++) {
                 character_jump(game->character);
                 game_frame(game, &stop);
               }
 
               const Uint8* state = SDL_GetKeyboardState(NULL);
               if (state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_SPACE]) {
-                for (int i = 0; i < jump_size * 0.5; i++) {
+                for (int i = 0; i < jump_size * 0.5  && !character_can_jump(game->character); i++) {
                   character_jump(game->character);
                   game_frame(game, &stop);
                 }
