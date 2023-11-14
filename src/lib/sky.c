@@ -15,6 +15,13 @@ void sky_init(Sky* sky, SDL_Renderer* renderer, int width, int height)
     (*sky)->width = width;
     (*sky)->height = height;
     (*sky)->texture = IMG_LoadTexture(renderer, "src/assets/images/clouds_pixelart.png");
+
+    if ((*sky)->texture == NULL) {
+      printf("%s\n", SDL_GetError());
+    }
+
+  } else {
+    printf("Erro ao alocar céu!\n");
   }
 }
 

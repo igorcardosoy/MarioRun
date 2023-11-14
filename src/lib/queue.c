@@ -8,7 +8,11 @@ struct queue_type {
 void queue_init(Queue* queue)
 {
   *queue = malloc(sizeof(struct queue_type));
-  (*queue)->armazenados = -1;
+  if (*queue != NULL) {
+    (*queue)->armazenados = -1;
+  } else {
+    printf("Erro ao alocar fila!\n");
+  }
 }
 
 bool queue_is_full(Queue queue)
@@ -40,7 +44,7 @@ Element queue_dequeue(Queue queue)
 
   if (!queue_is_empty(queue)) {
     removed = queue->obstaculos[0];
-    queue->armazenados--;
+    queue->armazenados -= 1;
 
     for (int i = 0; i < queue->armazenados; i++) {
       queue->obstaculos[i] = queue->obstaculos[i + 1];
@@ -58,6 +62,7 @@ bool queue_destroy(Queue* queue)
   if (!queue_is_empty) {
     while (!queue_is_empty(*queue)) {
       trash_collector = queue_dequeue(*queue);
+      obstacle_destroy(&trash_collector);
     }
 
     feedback = true;

@@ -16,6 +16,13 @@ void ground_init(Ground* ground, SDL_Renderer* renderer, int width, int height)
     (*ground)->width = width;
     (*ground)->height = height;
     (*ground)->texture = IMG_LoadTexture(renderer, "src/assets/images/mario_cenary.png");
+
+    if ((*ground)->texture == NULL) {
+      printf("%s\n", SDL_GetError());
+    }
+
+  } else {
+    printf("Erro ao alocar chão!\n");
   }
 }
 
