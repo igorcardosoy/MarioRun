@@ -89,9 +89,9 @@ void game_animate(Game game)
 
   game->score += 0.015 * game->speed;
 
-  if (((int)game->score) % 100 == 0 && game->score < 1800) {
-    game->speed += 0.1;
-  }
+  // if (((int)game->score) % 100 == 0 && game->score < 1800) {
+  //   game->speed += 0.1;
+  // }
 
   char score[10];
   snprintf(score, 10, "%d", (int)game->score);
@@ -109,7 +109,6 @@ bool game_events(Game game)
     switch (event.type) {
       case SDL_QUIT:
         SDL_DestroyWindow(game->window);
-        game->window = NULL;
         stop = true;
         break;
       case SDL_KEYDOWN:
@@ -117,19 +116,47 @@ bool game_events(Game game)
           case SDLK_ESCAPE:
             game_pause(game);
             break;
+          case SDLK_UP:
+          case SDLK_SPACE:
+            if (character_can_jump(game->character)) {
+              character_jump_sound(game->character);
+              int jump_size = game->height * 0.03;
+              for (int i = 0; i < jump_size; i++) {
+                character_jump(game->character);
+                game_frame(game, &stop);
+              }
+
+              const Uint8* state = SDL_GetKeyboardState(NULL);
+              if (state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_SPACE]) {
+                for (int i = 0; i < jump_size * 0.5; i++) {
+                  character_jump(game->character);
+                  game_frame(game, &stop);
+                }
+              }
+            }
+            break;
+          case SDLK_DOWN:
+            const Uint8* state = SDL_GetKeyboardState(NULL);
+            if (state[SDL_SCANCODE_DOWN]) {
+              if (!character_can_jump(game->character)) {
+                for (int i = 0; i < game->height*0.13; i++) {
+                  character_fall(game->character, game->height);
+                  game_frame(game, &stop);
+                }
+              } else {
+                SDL_PollEvent(&event);
+                while (event.type != SDL_KEYUP && !stop)
+                {
+                  SDL_PollEvent(&event);
+                  character_crouch(game->character, game->renderer, true);
+                  game_frame(game, &stop);
+                }
+                character_crouch(game->character, game->renderer, false);
+              }
+            }
         }
     }
   }
-
-  // const Uint8* state = SDL_GetKeyboardState(NULL);
-  // if (state[SDL_SCANCODE_DOWN]) {
-  //   character_fall(game->character, game->height);
-  //   game_animate(game);
-  // }
-  // if (state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_SPACE]) {
-  //     character_jump(game->character, game->height);
-  //     game_animate(game);
-  // }
 
   return stop;
 }
@@ -143,6 +170,7 @@ void game_run(Game game, bool* quit)
 {
 
   Mix_PlayMusic(game->main_song, -1);
+  Mix_VolumeMusic(MIX_MAX_VOLUME / 2);
 
   game_menu(game, false);
 

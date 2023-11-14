@@ -8,14 +8,23 @@ void character_init(Character* character, SDL_Renderer* renderer, int width, int
 // Função que detem o poder de desenhar o personagem na tela, sendo assim responsavel por animar o personagem e definir as animacoes caso o persona esteja pulando ou esteja agachado, e define tambem a gravidade do personagem. Recebe como argumento o personagem, o renderer e window.
 void character_animate(Character character, SDL_Renderer* renderer, int width, int height, int speed);
 
-// Função para fazer com que o personagem pule, sendo que, a altura do pula sera baseado no height atual da tela, recebendo como argumento o personagem e a altura.
-void character_jump(Character character, int height);
+// Função para fazer com que o personagem pule, sendo que, receben como argumento o personagem.
+void character_jump(Character character);
+
+// Função para verificar se o personagem pode pular, sendo que, ela retorna um booleano, recebendo como argumento o personagem.
+bool character_can_jump(Character character);
+
+// Função para tocar o som do pulo do personagem, recebendo como argumento o personagem.
+void character_jump_sound(Character character);
 
 // Função para fazer com que o personagem morra ou volte a vida.
 void character_set_dead(Character character, bool is_dead);
 
 // Função para fazer com que o personagem agache ou caso esteja no ar ele caia mais rapido, sendo que, a altura do agacha sera baseado no height atual da tela, recebendo como argumento o personagem e a altura.
 void character_fall(Character character, int height);
+
+// Função para fazer com que a textura do personagem mude para a textura de agachado, recebendo como argumento o personagem, o renderer e um bool de quer que o personagem agache ou não.
+void character_crouch(Character character, SDL_Renderer* renderer, bool is_crouched);
 
 // Função que retorna o calculo da colisão do personagem. Recebe como argumento o personagem.
 void character_get_colision(Character character, double* x1, double* x2, double* y1, double* y2);
