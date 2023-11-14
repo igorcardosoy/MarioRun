@@ -16,6 +16,7 @@ struct game_type {
   SDL_Window* window;
 
   int width, height;
+  int int_score;
 };
 
 void game_init(Game* game)
@@ -33,12 +34,12 @@ void game_init(Game* game)
 
     (*game)->speed = 2;
     (*game)->score = 0;
+    (*game)->int_score = 100;
 
     (*game)->window = SDL_CreateWindow("Mario Run", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 760, 540, SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
     (*game)->renderer = SDL_CreateRenderer((*game)->window, -1, SDL_RENDERER_ACCELERATED);
 
     SDL_GetWindowSize((*game)->window, &(*game)->width, &(*game)->height);
-
 
     (*game)->main_song = Mix_LoadMUS("./src/assets/audios/musica_tema.mp3");
 
@@ -89,9 +90,10 @@ void game_animate(Game game)
 
   game->score += 0.015 * game->speed;
 
-  // if (((int)game->score) % 100 == 0 && game->score < 1800) {
-  //   game->speed += 0.1;
-  // }
+  if (game->score > game->int_score && game->score < 1800) {
+    game->int_score += 100;
+    game->speed += 1;
+  }
 
   char score[10];
   snprintf(score, 10, "%d", (int)game->score);
@@ -118,9 +120,9 @@ bool game_events(Game game)
             break;
           case SDLK_UP:
           case SDLK_SPACE:
-            if (character_can_jump(game->character)) {
+            if (character_can_jump(game->character) && !character_is_crouched(game->character)) {
               character_jump_sound(game->character);
-              int jump_size = game->height * 0.03;
+              int jump_size = game->height * 0.04;
               for (int i = 0; i < jump_size; i++) {
                 character_jump(game->character);
                 game_frame(game, &stop);
@@ -139,25 +141,21 @@ bool game_events(Game game)
             const Uint8* state = SDL_GetKeyboardState(NULL);
             if (state[SDL_SCANCODE_DOWN]) {
               if (!character_can_jump(game->character)) {
-                for (int i = 0; i < game->height*0.13; i++) {
+                for (int i = 0; i < game->height * 0.13 && !character_can_jump(game->character); i++) {
                   character_fall(game->character, game->height);
                   game_frame(game, &stop);
                 }
               } else {
-                SDL_PollEvent(&event);
-                while (event.type != SDL_KEYUP && !stop)
-                {
-                  SDL_PollEvent(&event);
+                while (state[SDL_SCANCODE_DOWN]) {
                   character_crouch(game->character, game->renderer, true);
                   game_frame(game, &stop);
                 }
-                character_crouch(game->character, game->renderer, false);
               }
+              character_crouch(game->character, game->renderer, false);
             }
         }
     }
   }
-
   return stop;
 }
 

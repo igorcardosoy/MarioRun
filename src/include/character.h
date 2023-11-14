@@ -26,6 +26,9 @@ void character_fall(Character character, int height);
 // Função para fazer com que a textura do personagem mude para a textura de agachado, recebendo como argumento o personagem, o renderer e um bool de quer que o personagem agache ou não.
 void character_crouch(Character character, SDL_Renderer* renderer, bool is_crouched);
 
+// Função para verificar se o personagem esta agachado, recebendo como argumento o personagem.
+bool character_is_crouched(Character character);
+
 // Função que retorna o calculo da colisão do personagem. Recebe como argumento o personagem.
 void character_get_colision(Character character, double* x1, double* x2, double* y1, double* y2);
 

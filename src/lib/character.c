@@ -76,11 +76,17 @@ void character_animate(Character character, SDL_Renderer* renderer, int width, i
     } else {
       character->frame += (speed * 0.02);
     }
+  } else {
+    character->frame = 7;
   }
 
   SDL_Texture* texture = character->is_crouched ? character->texture_crouched : character->animation[(int) character->frame];
+  int render_height = character->is_crouched ? character->height * 0.60 : character->height;
+  int render_width = character->is_crouched ? character->width * 0.35 : character->width * 0.5;
+  int render_y = character->is_crouched ? character->y * 1.085 : character->y;
+  int render_x = character->is_crouched ? character->x * 1.25 : character->x;
 
-  SDL_Rect characterRect = { character->x, (character->is_crouched ? character->y * 1.11 : character->y), character->height, (character->is_crouched ? character->height * 0.5 : character->height)};
+  SDL_Rect characterRect = { render_x, render_y, render_width, render_height};
   SDL_RenderCopy(renderer, texture, NULL, &characterRect);
 
 }
@@ -97,12 +103,12 @@ void character_jump_sound(Character character)
 
 void character_jump(Character character)
 {
-    character->y -= 10;
+    character->y -= 7;
 }
 
 void character_fall(Character character, int height)
 {
-    character->y += height * 0.01;
+    character->y += height * 0.008;
 }
 
 void character_crouch(Character character, SDL_Renderer* renderer, bool is_crouched)
@@ -113,6 +119,11 @@ void character_crouch(Character character, SDL_Renderer* renderer, bool is_crouc
   } else {
     character->is_crouched = false;
   }
+}
+
+bool character_is_crouched(Character character)
+{
+  return character->is_crouched;
 }
 
 void character_set_dead(Character character, bool is_dead)
