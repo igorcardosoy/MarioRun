@@ -48,16 +48,18 @@ void game_init(Game* game)
     character_init(&(*game)->character, (*game)->renderer, (*game)->width, (*game)->height);
     text_init(&(*game)->text);
 
-    // queue_init(&(*game)->queue);
-    // srand(time(NULL));
+    queue_init(&(*game)->queue);
+    srand(time(NULL));
 
-    // for (int i = 0; i < 9; i++) {
-    //   int type = (rand() % 10) + 1;
+    for (int i = 0; i < 9; i++) {
+      int type = (rand() % 3) + 1;
 
-    //   obstacle_init(&(*game)->obstacle, (*game)->renderer, (*game)->width, (*game)->height, type);
-    //   queue_enqueue((*game)->queue, (*game)->obstacle);
-    // }
+      obstacle_init(&(*game)->obstacle, (*game)->renderer, (*game)->width, (*game)->height, type);
+      queue_enqueue((*game)->queue, (*game)->obstacle);
+    }
 
+  } else {
+    printf("Erro ao alocar jogo!\n");
   }
 }
 
@@ -75,21 +77,21 @@ void game_animate(Game game)
 
   sky_animate(game->sky, game->renderer, game->width, game->height, game->speed);
   ground_animate(game->ground, game->renderer, game->width, game->height, game->speed);
+  obstacle_animate(game->obstacle, game->renderer, game->width, game->height, game->speed);
   character_animate(game->character, game->renderer, game->width, game->height, game->speed);
 
-  // obstacle_animate(game->obstacle, game->renderer, game->width, game->height, game->speed);
-  // if (obstacle_get_position_x(game->obstacle) == -obstacle_get_width(game->obstacle)) {
-  //   obstacle_set_position_x(game->obstacle, game->width + obstacle_get_width(game->obstacle));
+  if (obstacle_get_position_x(game->obstacle) <= -obstacle_get_width(game->obstacle)) {
+    int type = (rand() % 3) + 1;
 
-  //   int type = (rand() % 10) + 1;
-  //   obstacle_init(&game->obstacle, game->renderer, game->width, game->height, type);
-  //   queue_enqueue(game->queue, game->obstacle);
+    obstacle_destroy(&(game->obstacle));
+    obstacle_init(&(game->obstacle), game->renderer, game->width, game->height, type);
 
-  //   game->obstacle = queue_dequeue(game->queue);
-  // }
+    queue_enqueue(game->queue, game->obstacle);
+    game->obstacle = queue_dequeue(game->queue);
+    printf("%d\n", obstacle_get_position_x(game->obstacle));
+  }
 
   game->score += 0.015 * game->speed;
-
   if (game->score > game->int_score && game->score < 1800) {
     game->int_score += 100;
     game->speed += 1;
@@ -98,7 +100,6 @@ void game_animate(Game game)
   char score[10];
   snprintf(score, 10, "%d", (int)game->score);
   text_render(game->text, game->renderer, game->width * 0.85, 0, game->width, game->height, "src/assets/fonts/font.ttf", 50, score);
-
   SDL_RenderPresent(game->renderer);
 }
 
@@ -134,7 +135,7 @@ bool game_events(Game game)
 
               const Uint8* state = SDL_GetKeyboardState(NULL);
               if (state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_SPACE]) {
-                for (int i = 0; i < jump_size * 0.5  && !character_can_jump(game->character); i++) {
+                for (int i = 0; i < jump_size * 0.5 && !character_can_jump(game->character); i++) {
                   character_jump(game->character);
                   game_frame(game, &stop);
                 }
@@ -237,11 +238,13 @@ void game_destroy(Game* game)
   sky_destroy(&(*game)->sky);
   ground_destroy(&(*game)->ground);
   character_destroy(&(*game)->character);
-  // obstacle_destroy(&(*game)->obstacle);
+  obstacle_destroy(&(*game)->obstacle);
   queue_destroy(&(*game)->queue);
   text_destroy(&(*game)->text);
 
+  Mix_FreeMusic((*game)->main_song);
   Mix_CloseAudio();
+
   SDL_DestroyWindow((*game)->window);
   SDL_DestroyRenderer((*game)->renderer);
 

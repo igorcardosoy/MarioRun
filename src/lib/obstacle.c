@@ -11,50 +11,67 @@ void obstacle_init(Obstacle* obstacle, SDL_Renderer* renderer, int width, int he
   *obstacle = malloc(sizeof(struct obstacle_type));
 
   if (*obstacle != NULL) {
-    // (*obstacle)->x = not implemented;
-    // (*obstacle)->y = not implemented;
-    (*obstacle)->width = width;
-    (*obstacle)->height = height;
 
-    char path[50];
-    sprintf(path, "assets/images/obstacle%d.png", type);
+    printf("%d\n", type);
+
+    (*obstacle)->x = width;
+    (*obstacle)->y = height * 0.853;
+
+    switch (type) {
+      case 1:
+        (*obstacle)->width = width * 0.15;
+        (*obstacle)->height = height * 0.15;
+        break;
+      case 2:
+        (*obstacle)->width = width * 0.15;
+        (*obstacle)->height = height * 0.15;
+        break;
+      case 3:
+        (*obstacle)->width = width * 0.15;
+        (*obstacle)->height = height * 0.15;
+        break;
+      default:
+        break;
+    }
+
+    char path[40];
+    snprintf(path, 40, "./src/assets/images/pipes/pipe%d.png", type);
     (*obstacle)->texture = IMG_LoadTexture(renderer, path);
+
+    if ((*obstacle)->texture == NULL) {
+      printf("%s\n", SDL_GetError());
+    }
+
   } else {
-    printf("Erro ao alocar memoria para o obstaculo!\n");
+    printf("Erro ao alocar obstaculo!\n");
   }
 }
 
 void obstacle_animate(Obstacle obstacle, SDL_Renderer* renderer, int width, int height, double speed)
 {
-  if (obstacle != NULL)
-  {
-    obstacle->x -= speed;
-    if (obstacle->x < -obstacle->width) {
-      obstacle->x = -obstacle->width * 0.018;
-    }
-  }
+
+  obstacle->width = width * 0.15;
+  obstacle->height = height * 0.15;
+  obstacle->y = height * 0.853;
+
+  obstacle->x -= speed;
+  SDL_Rect rect = { obstacle->x, obstacle->y - obstacle->height, obstacle->width, obstacle->height };
+  SDL_RenderCopy(renderer, obstacle->texture, NULL, &rect);
 }
 
 int obstacle_get_position_x(Obstacle obstacle)
 {
-  if (obstacle != NULL)
-    return obstacle->x;
-  
-  return -1;
+  return obstacle->x;
 }
 
 void obstacle_set_position_x(Obstacle obstacle, int x)
 {
-  if (obstacle != NULL)
-    obstacle->x = x;
+  obstacle->x = x;
 }
 
 int obstacle_get_width(Obstacle obstacle)
 {
-  if (obstacle != NULL)
-    return obstacle->width;
-
-  return -1;
+  return obstacle->width;
 }
 
 void obstacle_get_colision(Obstacle obstacle, double* x1, double* x2, double* y1, double* y2)
