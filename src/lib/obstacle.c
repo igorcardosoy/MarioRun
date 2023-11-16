@@ -48,7 +48,6 @@ void obstacle_animate(Obstacle obstacle, SDL_Renderer* renderer, int width, int 
         break;
     }
 
-
   obstacle->x -= speed;
   
   SDL_Rect rect = { obstacle->x, obstacle->y, obstacle->width, obstacle->height };
@@ -79,7 +78,6 @@ void obstacle_get_colision(Obstacle obstacle, int* x1, int* x2, int* y1, int* y2
   *x2 = obstacle->x + obstacle->width;
   *y1 = obstacle->y;
   *y2 = obstacle->y + obstacle->height;
-  
 }
 
 void obstacle_destroy(Obstacle* obstacle)
