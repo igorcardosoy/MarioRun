@@ -32,6 +32,7 @@ bool queue_enqueue(Queue queue, Element new_element)
   if (!queue_is_full(queue)) {
     queue->armazenados++;
     queue->obstaculos[queue->armazenados] = new_element;
+    printf("Fila: %d\n", queue->armazenados);
     feedback = true;
   }
 
@@ -44,11 +45,12 @@ Element queue_dequeue(Queue queue)
 
   if (!queue_is_empty(queue)) {
     removed = queue->obstaculos[0];
-    queue->armazenados -= 1;
 
     for (int i = 0; i < queue->armazenados; i++) {
       queue->obstaculos[i] = queue->obstaculos[i + 1];
     }
+    
+    queue->armazenados -= 1;
   }
 
   return removed;

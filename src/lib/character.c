@@ -28,10 +28,8 @@ void character_init(Character* character, SDL_Renderer* renderer, int width, int
 
     (*character)->x = width * 0.1;
     (*character)->y = 0;
-    (*character)->width = width * 0.15;
-    (*character)->height = height * 0.15;
     (*character)->speed = 0;
-    (*character)->gravity = 0.03;
+    (*character)->gravity = 0.02;
     (*character)->frame = 0;
     (*character)->is_dead = false;
     (*character)->is_crouched = false;
@@ -105,7 +103,7 @@ void character_jump_sound(Character character)
 
 void character_jump(Character character)
 {
-  character->y -= 7;
+  character->y -= 5;
 }
 
 void character_fall(Character character, int height)
@@ -161,7 +159,4 @@ void character_destroy(Character* character)
   SDL_DestroyTexture((*character)->texture_dead);
   Mix_FreeChunk((*character)->death_sound);
   Mix_FreeChunk((*character)->jump_sound);
-
-  free(*character);
-
 }

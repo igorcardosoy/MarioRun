@@ -3,6 +3,7 @@
 struct obstacle_type {
   int x, y;
   int width, height;
+  int type;
   SDL_Texture* texture;
 };
 
@@ -11,28 +12,10 @@ void obstacle_init(Obstacle* obstacle, SDL_Renderer* renderer, int width, int he
   *obstacle = malloc(sizeof(struct obstacle_type));
 
   if (*obstacle != NULL) {
-
-    printf("%d\n", type);
-
+    
     (*obstacle)->x = width;
     (*obstacle)->y = height * 0.853;
-
-    switch (type) {
-      case 1:
-        (*obstacle)->width = width * 0.15;
-        (*obstacle)->height = height * 0.15;
-        break;
-      case 2:
-        (*obstacle)->width = width * 0.15;
-        (*obstacle)->height = height * 0.15;
-        break;
-      case 3:
-        (*obstacle)->width = width * 0.15;
-        (*obstacle)->height = height * 0.15;
-        break;
-      default:
-        break;
-    }
+    (*obstacle)->type = type;
 
     char path[40];
     snprintf(path, 40, "./src/assets/images/pipes/pipe%d.png", type);
@@ -50,11 +33,26 @@ void obstacle_init(Obstacle* obstacle, SDL_Renderer* renderer, int width, int he
 void obstacle_animate(Obstacle obstacle, SDL_Renderer* renderer, int width, int height, double speed)
 {
 
-  obstacle->width = width * 0.15;
-  obstacle->height = height * 0.15;
-  obstacle->y = height * 0.853;
+  switch (obstacle->type) {
+      case 1:
+        obstacle->width = width * 0.08;
+        obstacle->height = height * 0.15;
+        break;
+      case 2:
+        obstacle->width = width * 0.13;
+        obstacle->height = height * 0.15;
+        break;
+      case 3:
+        obstacle->width = width * 0.18;
+        obstacle->height = height * 0.15;
+        break;
+      default:
+        break;
+    }
 
+  obstacle->y = height * 0.853;
   obstacle->x -= speed;
+
   SDL_Rect rect = { obstacle->x, obstacle->y - obstacle->height, obstacle->width, obstacle->height };
   SDL_RenderCopy(renderer, obstacle->texture, NULL, &rect);
 }
@@ -62,11 +60,6 @@ void obstacle_animate(Obstacle obstacle, SDL_Renderer* renderer, int width, int 
 int obstacle_get_position_x(Obstacle obstacle)
 {
   return obstacle->x;
-}
-
-void obstacle_set_position_x(Obstacle obstacle, int x)
-{
-  obstacle->x = x;
 }
 
 int obstacle_get_width(Obstacle obstacle)
@@ -85,5 +78,4 @@ void obstacle_get_colision(Obstacle obstacle, double* x1, double* x2, double* y1
 void obstacle_destroy(Obstacle* obstacle)
 {
   SDL_DestroyTexture((*obstacle)->texture);
-  free(*obstacle);
 }

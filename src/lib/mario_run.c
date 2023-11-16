@@ -32,7 +32,7 @@ void game_init(Game* game)
 
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
 
-    (*game)->speed = 2;
+    (*game)->speed = 3;
     (*game)->score = 0;
     (*game)->int_score = 100;
 
@@ -51,7 +51,7 @@ void game_init(Game* game)
     queue_init(&(*game)->queue);
     srand(time(NULL));
 
-    for (int i = 0; i < 9; i++) {
+    for (int i = 0; i < 5; i++) {
       int type = (rand() % 3) + 1;
 
       obstacle_init(&(*game)->obstacle, (*game)->renderer, (*game)->width, (*game)->height, type);
@@ -83,12 +83,14 @@ void game_animate(Game game)
   if (obstacle_get_position_x(game->obstacle) <= -obstacle_get_width(game->obstacle)) {
     int type = (rand() % 3) + 1;
 
-    obstacle_destroy(&(game->obstacle));
+    obstacle_destroy(&game->obstacle);
+    game->obstacle = NULL;
+
     obstacle_init(&(game->obstacle), game->renderer, game->width, game->height, type);
 
     queue_enqueue(game->queue, game->obstacle);
+
     game->obstacle = queue_dequeue(game->queue);
-    printf("%d\n", obstacle_get_position_x(game->obstacle));
   }
 
   game->score += 0.015 * game->speed;
@@ -123,7 +125,7 @@ bool game_events(Game game)
           case SDLK_SPACE:
             if (character_can_jump(game->character) && !character_is_crouched(game->character)) {
               character_jump_sound(game->character);
-              int jump_size = game->height * 0.04;
+              int jump_size = game->height * 0.06;
 
               character_jump(game->character);
               game_frame(game, &stop);
@@ -143,6 +145,7 @@ bool game_events(Game game)
             }
             break;
           case SDLK_DOWN:
+            if(true){};
             const Uint8* state = SDL_GetKeyboardState(NULL);
             if (state[SDL_SCANCODE_DOWN]) {
               if (!character_can_jump(game->character)) {
@@ -196,8 +199,9 @@ void game_frame(Game game, bool* quit)
 
   // if (are_colliding(game->character, game->obstacle) && !*quit) {
   //   character_set_dead(game->character, true);
-  //   *quit = game_menu(game, true);
-  //   game_reset(game);
+  //   printf("Game Over!\n");
+  //   // *quit = game_menu(game, true);
+  //   // game_reset(game);
   // }
 
   frame_time = SDL_GetTicks() - startLoop;
@@ -240,7 +244,6 @@ void game_destroy(Game* game)
   character_destroy(&(*game)->character);
   obstacle_destroy(&(*game)->obstacle);
   queue_destroy(&(*game)->queue);
-  text_destroy(&(*game)->text);
 
   Mix_FreeMusic((*game)->main_song);
   Mix_CloseAudio();

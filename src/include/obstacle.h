@@ -15,9 +15,6 @@ int obstacle_get_position_x(Obstacle obstacle);
 // Retorna a largura do obstaculo.
 int obstacle_get_width(Obstacle obstacle);
 
-// Função para setar a posição X do obstaculo.
-void obstacle_set_position_x(Obstacle obstacle, int x);
-
 // Função para fazer o calculo da colisão do obstaculo.
 void obstacle_get_colision(Obstacle obstacle, double* x1, double* x2, double* y1, double* y2);
 
