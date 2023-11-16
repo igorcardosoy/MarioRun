@@ -71,8 +71,6 @@ bool game_menu(Game game, bool is_dead)
 void game_animate(Game game)
 {
 
-  SDL_GL_GetDrawableSize(game->window, &game->width, &game->height);
-
   SDL_RenderClear(game->renderer);
 
   sky_animate(game->sky, game->renderer, game->width, game->height, game->speed);
@@ -90,6 +88,7 @@ void game_animate(Game game)
 
     queue_enqueue(game->queue, game->obstacle);
     game->obstacle = queue_dequeue(game->queue);
+    obstacle_reset_position(game->obstacle, game->width, game->height);
   }
 
   game->score += 0.01 * game->speed;
@@ -111,6 +110,12 @@ bool game_events(Game game)
 
   while (SDL_PollEvent(&event)) {
     switch (event.type) {
+      case SDL_WINDOWEVENT:
+        if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
+          SDL_GetWindowSize(game->window, &game->width, &game->height);
+          obstacle_reset_position(game->obstacle, game->width, game->height);
+        }      
+      break;
       case SDL_QUIT:
         SDL_DestroyWindow(game->window);
         stop = true;
@@ -202,13 +207,13 @@ void game_frame(Game game, bool* quit)
   game_animate(game);
   *quit = game_events(game);
 
-  if (are_colliding(game->character, game->obstacle) && !*quit) {
-    character_set_dead(game->character, true);
-    printf("Game Over!\n");
-    game_pause(game);
-    // *quit = game_menu(game, true);
-    // game_reset(game);
-  }
+  // if (are_colliding(game->character, game->obstacle) && !*quit) {
+  //   character_set_dead(game->character, true);
+  //   printf("Game Over!\n");
+  //   game_pause(game);
+  //   // *quit = game_menu(game, true);
+  //   // game_reset(game);
+  // }
 
   frame_time = SDL_GetTicks() - startLoop;
   if (frame_time < FRAME_TIME) {

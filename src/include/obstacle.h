@@ -15,6 +15,9 @@ int obstacle_get_position_x(Obstacle obstacle);
 // Retorna a largura do obstaculo.
 int obstacle_get_width(Obstacle obstacle);
 
+// Função para resetar a posição do obstaculo, recebe como parametro o obstaculo, a largura da tela. Fazendo com que o obstaculo volte para a direita da tela mesmo com a tela mudando de tamanho.
+void obstacle_reset_position(Obstacle obstacle, int width, int height);
+
 // Função para fazer o calculo da colisão do obstaculo.
 void obstacle_get_colision(Obstacle obstacle, int* x1, int* x2, int* y1, int* y2);
 

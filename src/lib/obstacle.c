@@ -61,6 +61,13 @@ int obstacle_get_position_x(Obstacle obstacle)
   return obstacle->x;
 }
 
+void obstacle_reset_position(Obstacle obstacle, int width, int height)
+{
+  obstacle->x = width;
+  obstacle->y = height * 0.704;
+}
+
+
 int obstacle_get_width(Obstacle obstacle)
 {
   return obstacle->width;
