@@ -32,7 +32,6 @@ bool queue_enqueue(Queue queue, Element new_element)
   if (!queue_is_full(queue)) {
     queue->armazenados++;
     queue->obstaculos[queue->armazenados] = new_element;
-    printf("Fila: %d\n", queue->armazenados);
     feedback = true;
   }
 
