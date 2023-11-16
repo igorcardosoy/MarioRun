@@ -29,7 +29,7 @@ void character_init(Character* character, SDL_Renderer* renderer, int width, int
     (*character)->x = width * 0.1;
     (*character)->y = 0;
     (*character)->speed = 0;
-    (*character)->gravity = 0.02;
+    (*character)->gravity = 0.03;
     (*character)->frame = 0;
     (*character)->is_dead = false;
     (*character)->is_crouched = false;
@@ -52,7 +52,7 @@ void character_init(Character* character, SDL_Renderer* renderer, int width, int
 
 void character_animate(Character character, SDL_Renderer* renderer, int width, int height, int speed)
 {
-  character->width = (width * 0.15);
+  character->width = (width * 0.08);
   character->height = (height * 0.15);
   character->bottom = height * 0.705;
 
@@ -80,9 +80,9 @@ void character_animate(Character character, SDL_Renderer* renderer, int width, i
     character->frame = 7;
   }
 
-  SDL_Texture* texture = character->is_crouched ? character->texture_crouched : character->animation[(int)character->frame];
+  SDL_Texture* texture = character->is_dead ? character->texture_dead : (character->is_crouched ? character->texture_crouched : character->animation[(int)character->frame]);
   int render_height = character->is_crouched ? character->height * 0.60 : character->height;
-  int render_width = character->is_crouched ? character->width * 0.35 : character->width * 0.5;
+  int render_width = character->is_crouched ? character->width * 0.65 : character->width;
   int render_y = character->is_crouched ? character->y * 1.085 : character->y;
   int render_x = character->is_crouched ? character->x * 1.25 : character->x;
 
@@ -135,12 +135,17 @@ void character_set_dead(Character character, bool is_dead)
   }
 }
 
-void character_get_colision(Character character, double* x1, double* x2, double* y1, double* y2)
+void character_get_colision(Character character, int* x1, int* x2, int* y1, int* y2)
 {
-  *x1 = character->x + character->width / 2;
-  *x2 = character->x - character->width / 2;
-  *y1 = character->y + character->height / 2;
-  *y2 = character->y - character->height / 2;
+  int render_height = character->is_crouched ? character->height * 0.60 : character->height;
+  int render_width = character->is_crouched ? character->width * 0.65 : character->width;
+  int render_y = character->is_crouched ? character->y * 1.085 : character->y;
+  int render_x = character->is_crouched ? character->x * 1.25 : character->x;
+
+  *x1 = render_x;
+  *x2 = render_x + render_width;
+  *y1 = render_y;
+  *y2 = render_y + render_height;
 }
 
 int character_get_position_y(Character character)

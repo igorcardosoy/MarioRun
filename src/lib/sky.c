@@ -12,8 +12,6 @@ void sky_init(Sky* sky, SDL_Renderer* renderer, int width, int height)
   if (*sky != NULL) {
     (*sky)->x = 0;
     (*sky)->y = 0;
-    (*sky)->width = width;
-    (*sky)->height = height;
     (*sky)->texture = IMG_LoadTexture(renderer, "src/assets/images/clouds_pixelart.png");
 
     if ((*sky)->texture == NULL) {
@@ -35,9 +33,7 @@ void sky_animate(Sky sky, SDL_Renderer* renderer, int width, int height, double 
     sky->x = sky->width * 0.018;
   }
 
-  SDL_SetRenderDrawColor(renderer, 94, 145, 254, 255);
-
-  SDL_Rect rect = { sky->x, sky->y - (height * 0.5) + (height * 0.15), sky->width * 2, sky->height };
+  SDL_Rect rect = { sky->x, sky->y, sky->width * 2, sky->height };
   SDL_RenderCopy(renderer, sky->texture, NULL, &rect);
 }
 

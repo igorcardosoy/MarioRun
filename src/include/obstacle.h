@@ -16,7 +16,7 @@ int obstacle_get_position_x(Obstacle obstacle);
 int obstacle_get_width(Obstacle obstacle);
 
 // Função para fazer o calculo da colisão do obstaculo.
-void obstacle_get_colision(Obstacle obstacle, double* x1, double* x2, double* y1, double* y2);
+void obstacle_get_colision(Obstacle obstacle, int* x1, int* x2, int* y1, int* y2);
 
 // Função para liberar a memoria alocada para o obstaculo.
 void obstacle_destroy(Obstacle* obstacle);

@@ -32,9 +32,9 @@ void game_init(Game* game)
 
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
 
-    (*game)->speed = 3;
+    (*game)->speed = 4;
     (*game)->score = 0;
-    (*game)->int_score = 100;
+    (*game)->int_score = 50;
 
     (*game)->window = SDL_CreateWindow("Mario Run", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 760, 540, SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
     (*game)->renderer = SDL_CreateRenderer((*game)->window, -1, SDL_RENDERER_ACCELERATED);
@@ -76,8 +76,8 @@ void game_animate(Game game)
   SDL_RenderClear(game->renderer);
 
   sky_animate(game->sky, game->renderer, game->width, game->height, game->speed);
-  ground_animate(game->ground, game->renderer, game->width, game->height, game->speed);
   obstacle_animate(game->obstacle, game->renderer, game->width, game->height, game->speed);
+  ground_animate(game->ground, game->renderer, game->width, game->height, game->speed);
   character_animate(game->character, game->renderer, game->width, game->height, game->speed);
 
   if (obstacle_get_position_x(game->obstacle) <= -obstacle_get_width(game->obstacle)) {
@@ -89,13 +89,12 @@ void game_animate(Game game)
     obstacle_init(&(game->obstacle), game->renderer, game->width, game->height, type);
 
     queue_enqueue(game->queue, game->obstacle);
-
     game->obstacle = queue_dequeue(game->queue);
   }
 
-  game->score += 0.015 * game->speed;
-  if (game->score > game->int_score && game->score < 1800) {
-    game->int_score += 100;
+  game->score += 0.01 * game->speed;
+  if (game->score > game->int_score && game->score < 1000) {
+    game->int_score += 50;
     game->speed += 1;
   }
 
@@ -169,7 +168,13 @@ bool game_events(Game game)
 
 void game_pause(Game game)
 {
-  //not implemented
+  game_animate(game);
+
+  while (true)
+  {
+    /* code */
+  }
+  
 }
 
 void game_run(Game game, bool* quit)
@@ -197,12 +202,13 @@ void game_frame(Game game, bool* quit)
   game_animate(game);
   *quit = game_events(game);
 
-  // if (are_colliding(game->character, game->obstacle) && !*quit) {
-  //   character_set_dead(game->character, true);
-  //   printf("Game Over!\n");
-  //   // *quit = game_menu(game, true);
-  //   // game_reset(game);
-  // }
+  if (are_colliding(game->character, game->obstacle) && !*quit) {
+    character_set_dead(game->character, true);
+    printf("Game Over!\n");
+    game_pause(game);
+    // *quit = game_menu(game, true);
+    // game_reset(game);
+  }
 
   frame_time = SDL_GetTicks() - startLoop;
   if (frame_time < FRAME_TIME) {
@@ -219,19 +225,19 @@ void game_reset(Game game)
 
 bool are_colliding(Character character, Obstacle obstacle)
 {
-  double c_x1, c_x2, c_y1, c_y2;
-  double o_x1, o_x2, o_y1, o_y2;
+  int c_left, c_right, c_top, c_bottom;
+  int o_left, o_right, o_top, o_bottom;
 
-  character_get_colision(character, &c_x1, &c_x2, &c_y1, &c_y2);
-  obstacle_get_colision(obstacle, &o_x1, &o_x2, &o_y1, &o_y2);
+  character_get_colision(character, &c_left, &c_right, &c_top, &c_bottom);
+  obstacle_get_colision(obstacle, &o_left, &o_right, &o_top, &o_bottom);
 
-  if (c_x1 < o_x2)
+  if (c_bottom <= o_top)
     return false;
-  if (c_x2 > o_x1)
+  if (c_top >= o_bottom)
     return false;
-  if (c_y1 < o_y2)
+  if (c_right <= o_left)
     return false;
-  if (c_y2 > o_y1)
+  if (c_left >= o_right)
     return false;
 
   return true;

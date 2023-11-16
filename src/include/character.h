@@ -30,7 +30,7 @@ void character_crouch(Character character, SDL_Renderer* renderer, bool is_crouc
 bool character_is_crouched(Character character);
 
 // Função que retorna o calculo da colisão do personagem. Recebe como argumento o personagem.
-void character_get_colision(Character character, double* x1, double* x2, double* y1, double* y2);
+void character_get_colision(Character character, int* x1, int* x2, int* y1, int* y2);
 
 // Função para retornar a posição Y do personagem. Podendo ser utilizada para varios parametros.
 int character_get_position_y(Character character);
