@@ -23,7 +23,7 @@ $(NAME)	:	$(OBJ)
 			$(CC) -o $(NAME) $(SRC) $(SDL2_PATH) $(CFLAGS) $(LDLIBS_WIN)
 
 win 	: 	
-			$(CC) -o $(NAME)_win64 $(SRC) $(SDL2_PATH) $(CFLAGS) $(LINKER_FLAGS)
+			$(CC) -o $(NAME)_win64 $(SRC) $(SDL2_PATH) $(CFLAGS) $(LDLIBS_WIN)
 			cls  
 
 linux   :  	
@@ -31,10 +31,7 @@ linux   :
 			clear
 
 linux-libs:
-			sudo apt-get install libsdl2-dev
-  			sudo apt-get install libsdl2-image-dev
- 			sudo apt-get install libsdl2-mixer-dev
-  			sudo apt-get install libsdl2-ttf-dev
+			sudo apt-get install libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev
 
 icon	:	
 			windres -i ./src/include/Icon.rc -o Icon.o
