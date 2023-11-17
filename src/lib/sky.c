@@ -6,7 +6,7 @@ struct sky_type {
   SDL_Texture* texture;
 };
 
-void sky_init(Sky* sky, SDL_Renderer* renderer, int width, int height)
+void sky_init(Sky* sky, SDL_Renderer* renderer)
 {
   *sky = malloc(sizeof(struct sky_type));
   if (*sky != NULL) {
@@ -30,7 +30,7 @@ void sky_animate(Sky sky, SDL_Renderer* renderer, int width, int height, double 
 
   sky->x -= (speed / 2);
   if (sky->x < -sky->width) {
-    sky->x = sky->width * 0.018;
+    sky->x = 0;
   }
 
   SDL_Rect rect = { sky->x, sky->y, sky->width * 2, sky->height };

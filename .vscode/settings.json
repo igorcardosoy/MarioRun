@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.c": "c",
+        "*.txt": "xml",
+        "mario_run.h": "c"
+    }
+}

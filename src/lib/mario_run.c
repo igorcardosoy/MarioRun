@@ -43,8 +43,8 @@ void game_init(Game* game)
 
     (*game)->main_song = Mix_LoadMUS("./src/assets/audios/musica_tema.mp3");
 
-    sky_init(&(*game)->sky, (*game)->renderer, (*game)->width, (*game)->height);
-    ground_init(&(*game)->ground, (*game)->renderer, (*game)->width, (*game)->height);
+    sky_init(&(*game)->sky, (*game)->renderer);
+    ground_init(&(*game)->ground, (*game)->renderer);
     character_init(&(*game)->character, (*game)->renderer, (*game)->width, (*game)->height);
     text_init(&(*game)->text);
 
@@ -65,18 +65,29 @@ void game_init(Game* game)
 
 bool game_menu(Game game, bool is_dead)
 {
-  //not implemented
+  // not implemented yet
 }
 
 void game_animate(Game game)
 {
 
+  game_events(game);
+  if (character_can_jump(game->character))
+    character_set_falling(game->character, false);
+
   SDL_RenderClear(game->renderer);
+
+  if (!character_is_dead(game->character)) {
+    game->score += 0.01 * game->speed;
+    if (game->score > game->int_score && game->score < 1000) {
+      game->int_score += 50;
+      game->speed += 1;
+    }
+  }
 
   sky_animate(game->sky, game->renderer, game->width, game->height, game->speed);
   obstacle_animate(game->obstacle, game->renderer, game->width, game->height, game->speed);
   ground_animate(game->ground, game->renderer, game->width, game->height, game->speed);
-  character_animate(game->character, game->renderer, game->width, game->height, game->speed);
 
   if (obstacle_get_position_x(game->obstacle) <= -obstacle_get_width(game->obstacle)) {
     int type = (rand() % 3) + 1;
@@ -88,14 +99,9 @@ void game_animate(Game game)
 
     queue_enqueue(game->queue, game->obstacle);
     game->obstacle = queue_dequeue(game->queue);
-    obstacle_reset_position(game->obstacle, game->width, game->height);
   }
 
-  game->score += 0.01 * game->speed;
-  if (game->score > game->int_score && game->score < 1000) {
-    game->int_score += 50;
-    game->speed += 1;
-  }
+  character_animate(game->character, game->renderer, game->width, game->height, game->speed);
 
   char score[10];
   snprintf(score, 10, "%d", (int)game->score);
@@ -114,8 +120,8 @@ bool game_events(Game game)
         if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
           SDL_GetWindowSize(game->window, &game->width, &game->height);
           obstacle_reset_position(game->obstacle, game->width, game->height);
-        }      
-      break;
+        }
+        break;
       case SDL_QUIT:
         SDL_DestroyWindow(game->window);
         stop = true;
@@ -123,7 +129,7 @@ bool game_events(Game game)
       case SDL_KEYDOWN:
         switch (event.key.keysym.sym) {
           case SDLK_ESCAPE:
-            game_pause(game);
+            stop = true;
             break;
           case SDLK_UP:
           case SDLK_SPACE:
@@ -146,12 +152,15 @@ bool game_events(Game game)
                   game_frame(game, &stop);
                 }
               }
+
+              character_set_falling(game->character, true);
             }
             break;
           case SDLK_DOWN:
-            if(true){};
+            if (true) {};
             const Uint8* state = SDL_GetKeyboardState(NULL);
             if (state[SDL_SCANCODE_DOWN]) {
+              character_set_falling(game->character, true);
               if (!character_can_jump(game->character)) {
                 for (int i = 0; i < game->height * 0.13 && !character_can_jump(game->character); i++) {
                   character_fall(game->character, game->height);
@@ -159,11 +168,11 @@ bool game_events(Game game)
                 }
               } else {
                 while (state[SDL_SCANCODE_DOWN]) {
-                  character_crouch(game->character, game->renderer, true);
+                  character_crouch(game->character, true);
                   game_frame(game, &stop);
                 }
               }
-              character_crouch(game->character, game->renderer, false);
+              character_crouch(game->character, false);
             }
         }
     }
@@ -175,11 +184,9 @@ void game_pause(Game game)
 {
   game_animate(game);
 
-  while (true)
-  {
-    /* code */
+  while (true) {
+    game_events(game);
   }
-  
 }
 
 void game_run(Game game, bool* quit)
@@ -207,13 +214,20 @@ void game_frame(Game game, bool* quit)
   game_animate(game);
   *quit = game_events(game);
 
-  // if (are_colliding(game->character, game->obstacle) && !*quit) {
-  //   character_set_dead(game->character, true);
-  //   printf("Game Over!\n");
-  //   game_pause(game);
-  //   // *quit = game_menu(game, true);
-  //   // game_reset(game);
-  // }
+  if (are_colliding(game->character, game->obstacle) && !*quit) {
+
+    SDL_Delay(1000);
+    character_set_dead(game->character, true);
+
+    while (character_is_ondisplay(game->character, game->height)) {
+      game->speed = 0;
+      game_animate(game);
+    }
+
+    game_pause(game);
+    *quit = game_menu(game, true);
+    game_reset(game);
+  }
 
   frame_time = SDL_GetTicks() - startLoop;
   if (frame_time < FRAME_TIME) {
@@ -256,8 +270,8 @@ void game_destroy(Game* game)
   obstacle_destroy(&(*game)->obstacle);
   queue_destroy(&(*game)->queue);
 
-  Mix_FreeMusic((*game)->main_song);
   Mix_CloseAudio();
+  Mix_FreeMusic((*game)->main_song);
 
   SDL_DestroyWindow((*game)->window);
   SDL_DestroyRenderer((*game)->renderer);

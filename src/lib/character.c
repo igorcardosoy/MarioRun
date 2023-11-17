@@ -9,6 +9,7 @@ struct character_type {
   double frame;
   bool is_dead;
   bool is_crouched;
+  bool is_falling;
   SDL_Texture* animation[12];
   SDL_Texture* texture_crouched;
   SDL_Texture* texture_dead;
@@ -27,7 +28,8 @@ void character_init(Character* character, SDL_Renderer* renderer, int width, int
     (*character)->jump_sound = Mix_LoadWAV("./src/assets/audios/mario_pulo_alto.mp3");
 
     (*character)->x = width * 0.1;
-    (*character)->y = 0;
+    (*character)->bottom = height * 0.705;
+    (*character)->y = (*character)->bottom;
     (*character)->speed = 0;
     (*character)->gravity = 0.03;
     (*character)->frame = 0;
@@ -56,35 +58,56 @@ void character_animate(Character character, SDL_Renderer* renderer, int width, i
   character->height = (height * 0.15);
   character->bottom = height * 0.705;
 
+  if (character->is_dead) {
+    character->gravity = 0.01;
+  } else {
+    character->gravity = 0.03;
+  }
+
   // Gravidade 
-  if (character->y < character->bottom) {
+  if (character->y < character->bottom || character->is_dead) {
     character->speed += character->gravity;
     character->y += character->speed;
   }
 
-  if (character->y == character->bottom) {
+  if (character->y == character->bottom && !character->is_dead) {
     character->speed = 0;
   }
 
-  if (character->y >= character->bottom)
+  if (character->y >= character->bottom && !character->is_dead)
     character->y = character->bottom;
 
   // Reset da animação.
   if (!(character->y < character->bottom)) {
+
+    character->frame += (speed * 0.02);
+
     if (character->frame >= 12) {
       character->frame = 0;
-    } else {
-      character->frame += (speed * 0.02);
     }
   } else {
-    character->frame = 7;
+    if (character->is_falling)
+      character->frame = 3;
+    else
+      character->frame = 1;
   }
 
-  SDL_Texture* texture = character->is_dead ? character->texture_dead : (character->is_crouched ? character->texture_crouched : character->animation[(int)character->frame]);
-  int render_height = character->is_crouched ? character->height * 0.60 : character->height;
-  int render_width = character->is_crouched ? character->width * 0.65 : character->width;
-  int render_y = character->is_crouched ? character->y * 1.085 : character->y;
-  int render_x = character->is_crouched ? character->x * 1.25 : character->x;
+  SDL_Texture* texture = character->animation[(int)character->frame];
+  int render_height = character->height;
+  int render_width = character->width;
+  int render_y = character->y;
+  int render_x = character->x;
+
+  if (character->is_dead) {
+    texture = character->texture_dead;
+    render_width *= 0.65;
+  } else if (character->is_crouched) {
+    texture = character->texture_crouched;
+    render_height *= 0.60;
+    render_width *= 0.65;
+    render_y *= 1.085;
+    render_x *= 1.25;
+  }
 
   SDL_Rect characterRect = { render_x, render_y, render_width, render_height };
   SDL_RenderCopy(renderer, texture, NULL, &characterRect);
@@ -94,6 +117,11 @@ void character_animate(Character character, SDL_Renderer* renderer, int width, i
 bool character_can_jump(Character character)
 {
   return character->y == character->bottom;
+}
+
+void character_set_falling(Character character, bool is_falling)
+{
+  character->is_falling = is_falling;
 }
 
 void character_jump_sound(Character character)
@@ -111,7 +139,7 @@ void character_fall(Character character, int height)
   character->y += height * 0.008;
 }
 
-void character_crouch(Character character, SDL_Renderer* renderer, bool is_crouched)
+void character_crouch(Character character, bool is_crouched)
 {
   if (is_crouched) {
     character->is_crouched = true;
@@ -135,6 +163,16 @@ void character_set_dead(Character character, bool is_dead)
   }
 }
 
+bool character_is_dead(Character character)
+{
+  return character->is_dead;
+}
+
+bool character_is_ondisplay(Character character, int height)
+{
+  return character->y < character->height + height;
+}
+
 void character_get_colision(Character character, int* x1, int* x2, int* y1, int* y2)
 {
   int render_height = character->is_crouched ? character->height * 0.60 : character->height;
@@ -155,7 +193,6 @@ int character_get_position_y(Character character)
 
 void character_destroy(Character* character)
 {
-
   for (int i = 0; i < 12; i++) {
     SDL_DestroyTexture((*character)->animation[i]);
   }

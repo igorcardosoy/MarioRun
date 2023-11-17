@@ -12,7 +12,7 @@ void text_init(Text* text)
 {
   *text = malloc(sizeof(struct text_type));
   if (*text != NULL) {
-    (*text)->color = (SDL_Color){ 255, 255, 255, 255 };
+    (*text)->color = (SDL_Color){ 0, 0, 0, 255 };
   } else {
     printf("Erro ao alocar texto!\n");
   }

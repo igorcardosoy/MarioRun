@@ -9,21 +9,33 @@ RM		=	rm -f
 
 OBJ		=	$(SRC:.c=.o)
 
-CFLAGS	=	-I ./SDL2/include/ -L ./SDL2/lib/
+SDL2_PATH =	-I ./SDL2/include/ -L ./SDL2/lib/
 
-LDLIBS	=	-lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
+CFLAGS	=	-Wall -std=c99  ./src/include/Icon.o
+
+LDLIBS_WIN	=	-lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
+
+LBLIBS_LINUX =	-ldl -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
 
 all		:	$(NAME)
 
 $(NAME)	:	$(OBJ)
-			$(CC) -std=c99 -o $(NAME) $(SRC) $(CFLAGS) $(LDLIBS)
+			$(CC) -o $(NAME) $(SRC) $(SDL2_PATH) $(CFLAGS) $(LDLIBS_WIN)
 
-clean	:
-			$(RM) $(OBJ)
+win 	: 	
+			$(CC) -o $(NAME)_win64 $(SRC) $(SDL2_PATH) $(CFLAGS) $(LINKER_FLAGS)
+			cls  
 
-fclean	:	clean
-			$(RM) $(NAME)
+linux   :  	
+			$(CC) -o $(NAME)_linux $(SRC) $(CFLAGS) $(LDLIBS_LINUX)
+			clear
 
-re		:	fclean all
+linux-libs:
+			sudo apt-get install libsdl2-dev
+  			sudo apt-get install libsdl2-image-dev
+ 			sudo apt-get install libsdl2-mixer-dev
+  			sudo apt-get install libsdl2-ttf-dev
 
-.PHONY	:	all clean fclean re
+icon	:	
+			windres -i ./src/include/Icon.rc -o Icon.o
+

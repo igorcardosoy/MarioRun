@@ -7,7 +7,7 @@ struct ground_type {
   SDL_Texture* texture;
 };
 
-void ground_init(Ground* ground, SDL_Renderer* renderer, int width, int height)
+void ground_init(Ground* ground, SDL_Renderer* renderer)
 {
   *ground = malloc(sizeof(struct ground_type));
   if (*ground != NULL) {
@@ -31,7 +31,7 @@ void ground_animate(Ground ground, SDL_Renderer* renderer, int width, int height
   if (ground->x < -ground->width) {
     ground->x = -ground->width * 0.018;
   }
-  
+
   ground->x -= speed;
 
 

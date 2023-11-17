@@ -42,15 +42,13 @@ Element queue_dequeue(Queue queue)
 {
   Element removed = NULL;
 
-  if (!queue_is_empty(queue)) {
-    removed = queue->obstaculos[0];
+  removed = queue->obstaculos[0];
 
-    for (int i = 0; i < queue->armazenados; i++) {
-      queue->obstaculos[i] = queue->obstaculos[i + 1];
-    }
-    
-    queue->armazenados -= 1;
+  for (int i = 0; i < queue->armazenados; i++) {
+    queue->obstaculos[i] = queue->obstaculos[i + 1];
   }
+
+  queue->armazenados -= 1;
 
   return removed;
 }
@@ -60,14 +58,12 @@ bool queue_destroy(Queue* queue)
   Element trash_collector;
   bool feedback = false;
 
-  if (!queue_is_empty) {
-    while (!queue_is_empty(*queue)) {
-      trash_collector = queue_dequeue(*queue);
-      obstacle_destroy(&trash_collector);
-    }
-
-    feedback = true;
+  while (!queue_is_empty(*queue)) {
+    trash_collector = queue_dequeue(*queue);
+    obstacle_destroy(&trash_collector);
   }
+
+  feedback = true;
 
   return feedback;
 }

@@ -8,19 +8,17 @@ Este repositório contém o código fonte e a documentação para o jogo Mario R
 Mario Run é uma emocionante recriação do famoso jogo "Google Dino Run", inserida no envolvente universo dos jogos do Mario. Nesta versão, o jogador assume o controle de Mario, o icônico encanador bigodudo, enquanto ele corre pelo ambiente de Super Mario Bros. Seu objetivo é pular sobre canos, evitar perigos e desafios, tudo isso para alcançar a maior pontuação possível.  
 
 
+
+
 ## Como jogar?
 
 Para jogar o Mario Run, siga as instruções abaixo:
 
 ### 1. Baixar:
-...
+    
 
 ### 2. Compilar e Instalar:
 
-Para Windowns:
- gcc -std=c99 -o MarioRun-win64.exe ./src/main.c ./src/lib/*c -I ./SDL2/include -L ./SDL2/lib/ -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
-Para Linux:
- gcc -o MarioRun-linux ./src/main.c ./src/lib/*c -ldl -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
 
 ### 3. Executar:
 ...
@@ -49,6 +47,14 @@ Este jogo foi desenvolvido pelos seguintes alunos do IFSP, Campus Araraquara, no
 (Obs: Aguarde a adição da descrição do projeto e da estrutura do software pelos desenvolvedores.)
 - Descreva a estrutura do software (incluindo a estrutura de dados). 
 - Incluir informações sobre a estratégia escolhida para implementação do jogo (se houve mudança durante o desenvolvimento deve-se descrever também);
+
+Foi utilizado para o projeto:
+
+- C
+- [SDL2](https://github.com/libsdl-org/SDL)
+- [SDL_image](https://github.com/libsdl-org/SDL_image)
+- [SDL_mixer](https://github.com/libsdl-org/SDL_mixer)
+- [SDL_ttf](https://github.com/libsdl-org/SDL_ttf)
 
 
 ## Screenshots:
