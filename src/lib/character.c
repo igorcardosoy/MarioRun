@@ -180,10 +180,17 @@ void character_get_colision(Character character, int* x1, int* x2, int* y1, int*
   int render_y = character->is_crouched ? character->y * 1.085 : character->y;
   int render_x = character->is_crouched ? character->x * 1.25 : character->x;
 
-  *x1 = render_x;
-  *x2 = render_x + render_width;
-  *y1 = render_y;
-  *y2 = render_y + render_height;
+  if (!character->is_crouched) {
+    *x1 = render_x + render_width * 0.6;
+    *x2 = render_x + render_width;
+    *y1 = render_y;
+    *y2 = render_y + render_height;
+  } else {
+    *x1 = render_x;
+    *x2 = render_x + render_width;
+    *y1 = render_y;
+    *y2 = render_y + render_height;
+  }
 }
 
 int character_get_position_y(Character character)

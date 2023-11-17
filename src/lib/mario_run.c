@@ -65,13 +65,32 @@ void game_init(Game* game)
 
 bool game_menu(Game game, bool is_dead)
 {
-  // not implemented yet
+  bool quit = false;
+  SDL_Event event;
+
+  while (!quit) {
+    while (SDL_PollEvent(&event)) {
+      switch (event.type) {
+        case SDL_QUIT:
+          quit = true;
+          break;
+        case SDL_KEYDOWN:
+          switch (event.key.keysym.sym) {
+            case SDLK_SPACE:
+            case SDLK_ESCAPE:
+            case SDLK_UP:
+              quit = true;
+              break;
+          }
+      }
+    }
+  }
+
+  return quit;
 }
 
 void game_animate(Game game)
 {
-
-  game_events(game);
   if (character_can_jump(game->character))
     character_set_falling(game->character, false);
 
@@ -191,11 +210,11 @@ void game_pause(Game game)
 
 void game_run(Game game, bool* quit)
 {
+  game_animate(game);
+  game_menu(game, false);
 
   Mix_PlayMusic(game->main_song, -1);
   Mix_VolumeMusic(MIX_MAX_VOLUME / 2);
-
-  game_menu(game, false);
 
   while (!*quit) {
     game_frame(game, quit);
@@ -224,9 +243,7 @@ void game_frame(Game game, bool* quit)
       game_animate(game);
     }
 
-    game_pause(game);
     *quit = game_menu(game, true);
-    game_reset(game);
   }
 
   frame_time = SDL_GetTicks() - startLoop;
@@ -238,8 +255,6 @@ void game_frame(Game game, bool* quit)
 void game_reset(Game game)
 {
   // Não sei se essa implementação funciona, deixar provisioriamente até futuros testes.
-  game_destroy(&game);
-  game_init(&game);
 }
 
 bool are_colliding(Character character, Obstacle obstacle)

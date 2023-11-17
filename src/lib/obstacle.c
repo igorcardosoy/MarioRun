@@ -74,10 +74,20 @@ int obstacle_get_width(Obstacle obstacle)
 
 void obstacle_get_colision(Obstacle obstacle, int* x1, int* x2, int* y1, int* y2)
 {
-  *x1 = obstacle->x;
-  *x2 = obstacle->x + obstacle->width;
-  *y1 = obstacle->y;
-  *y2 = obstacle->y + obstacle->height;
+  if (obstacle->type != 3)
+  {
+    *x1 = obstacle->x;
+    *x2 = obstacle->x + obstacle->width;
+    *y1 = obstacle->y;
+    *y2 = obstacle->y + obstacle->height;
+  } else {
+    *x1 = obstacle->x;
+    *x2 = obstacle->x + obstacle->width;
+    *y1 = obstacle->y + (obstacle->height * 0.19);
+    *y2 = obstacle->y + obstacle->height;
+  }
+  
+  
 }
 
 void obstacle_destroy(Obstacle* obstacle)
