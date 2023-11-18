@@ -114,7 +114,7 @@ void game_animate(Game game)
 
   if (!character_is_dead(game->character)) {
     game->score += 0.01 * game->speed;
-    if (game->score > game->int_score && game->score < 1000) {
+    if (game->score > game->int_score && game->score < 800) {
       game->int_score += 50;
       game->speed += 1;
     }
