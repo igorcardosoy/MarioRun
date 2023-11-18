@@ -30,7 +30,7 @@ void game_frame(Game game, bool* quit);
 bool game_events(Game game);
 
 // Executa o jogo em loop até o player decidir sair do jogo.
-void game_run(Game game, bool* quit);
+void game_run(Game game);
 
 // Reseta o jogo e todos os paramestros de outros TADs.
 void game_reset(Game game);

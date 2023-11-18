@@ -52,7 +52,7 @@ void game_init(Game* game)
     srand(time(NULL));
 
     for (int i = 0; i < 5; i++) {
-      int type = (rand() % 3) + 1;
+      int type = (rand() % 5) + 1;
 
       obstacle_init(&(*game)->obstacle, (*game)->renderer, (*game)->width, (*game)->height, type);
       queue_enqueue((*game)->queue, (*game)->obstacle);
@@ -65,21 +65,37 @@ void game_init(Game* game)
 
 bool game_menu(Game game, bool is_dead)
 {
-  bool quit = false;
+  bool quit, stop;
+  quit = stop = false;
   SDL_Event event;
 
-  while (!quit) {
+  if (!is_dead) {
+    text_render(game->text, game->renderer, game->width * 0.35, game->height * 0.1, game->width * 3, game->height, "src/assets/fonts/font.ttf", 100, "Mario Run");
+    text_render(game->text, game->renderer, game->width * 0.3, game->height * 0.5, game->width * 4, game->height / 2, "src/assets/fonts/font.ttf", 100, "Pressione qualquer tecla para jogar");
+    text_render(game->text, game->renderer, 10, 0, game->width * 2, game->height / 3, "src/assets/fonts/font.ttf", 50, "Pressione ESC para sair");
+  } else {
+    text_render(game->text, game->renderer, game->width * 0.35, game->height * 0.1, game->width * 3, game->height, "src/assets/fonts/font.ttf", 100, "Game Over");
+    text_render(game->text, game->renderer, game->width * 0.3, game->height * 0.5, game->width * 4, game->height / 2, "src/assets/fonts/font.ttf", 100, "Pressione qualquer tecla para jogar novamente");
+    text_render(game->text, game->renderer, 10, 0, game->width * 2, game->height / 3, "src/assets/fonts/font.ttf", 50, "Pressione ESC para sair");
+  }
+
+  SDL_RenderPresent(game->renderer);
+
+  while (!stop) {
     while (SDL_PollEvent(&event)) {
       switch (event.type) {
         case SDL_QUIT:
           quit = true;
+          stop = true;
           break;
         case SDL_KEYDOWN:
           switch (event.key.keysym.sym) {
-            case SDLK_SPACE:
             case SDLK_ESCAPE:
-            case SDLK_UP:
               quit = true;
+              stop = true;
+              break;
+            default:
+              stop = true;
               break;
           }
       }
@@ -109,7 +125,7 @@ void game_animate(Game game)
   ground_animate(game->ground, game->renderer, game->width, game->height, game->speed);
 
   if (obstacle_get_position_x(game->obstacle) <= -obstacle_get_width(game->obstacle)) {
-    int type = (rand() % 3) + 1;
+    int type = (rand() % 5) + 1;
 
     obstacle_destroy(&game->obstacle);
     game->obstacle = NULL;
@@ -208,16 +224,20 @@ void game_pause(Game game)
   }
 }
 
-void game_run(Game game, bool* quit)
+void game_run(Game game)
 {
+  bool quit = false;
+
   game_animate(game);
-  game_menu(game, false);
 
-  Mix_PlayMusic(game->main_song, -1);
-  Mix_VolumeMusic(MIX_MAX_VOLUME / 2);
+  if (!game_menu(game, false)) {
 
-  while (!*quit) {
-    game_frame(game, quit);
+    Mix_PlayMusic(game->main_song, -1);
+    Mix_VolumeMusic(MIX_MAX_VOLUME / 2);
+
+    while (!quit) {
+      game_frame(game, &quit);
+    }
   }
 
   game_destroy(&game);
@@ -244,6 +264,10 @@ void game_frame(Game game, bool* quit)
     }
 
     *quit = game_menu(game, true);
+
+    if (!*quit)
+      game_reset(game);
+
   }
 
   frame_time = SDL_GetTicks() - startLoop;
@@ -254,7 +278,13 @@ void game_frame(Game game, bool* quit)
 
 void game_reset(Game game)
 {
-  // Não sei se essa implementação funciona, deixar provisioriamente até futuros testes.
+  obstacle_reset_position(game->obstacle, game->width, game->height);
+  game->score = 0;
+  game->int_score = 50;
+  game->speed = 4;
+
+  character_destroy(&game->character);
+  character_init(&game->character, game->renderer, game->width, game->height);
 }
 
 bool are_colliding(Character character, Obstacle obstacle)

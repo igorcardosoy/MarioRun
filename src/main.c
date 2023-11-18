@@ -3,11 +3,10 @@
 int main(int argc, char* argv[])
 {
     Game game;
-    bool quit = false;
-
+    
     game_init(&game);
 
-    game_run(game, &quit);
+    game_run(game);
 
     return 0;
 }
