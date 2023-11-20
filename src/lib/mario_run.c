@@ -51,7 +51,7 @@ void game_init(Game* game)
     queue_init(&(*game)->queue);
     srand(time(NULL));
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 1; i++) {
       int type = (rand() % 5) + 1;
 
       obstacle_init(&(*game)->obstacle, (*game)->renderer, (*game)->width, (*game)->height, type);
@@ -75,7 +75,7 @@ bool game_menu(Game game, bool is_dead)
     text_render(game->text, game->renderer, 10, 0, game->width * 2, game->height / 3, "src/assets/fonts/font.ttf", 50, "Pressione ESC para sair");
   } else {
     text_render(game->text, game->renderer, game->width * 0.35, game->height * 0.1, game->width * 3, game->height, "src/assets/fonts/font.ttf", 100, "Game Over");
-    text_render(game->text, game->renderer, game->width * 0.3, game->height * 0.5, game->width * 4, game->height / 2, "src/assets/fonts/font.ttf", 100, "Pressione qualquer tecla para jogar novamente");
+    text_render(game->text, game->renderer, game->width * 0.25, game->height * 0.5, game->width * 5, game->height / 2, "src/assets/fonts/font.ttf", 100, "Pressione qualquer tecla para jogar novamente");
     text_render(game->text, game->renderer, 10, 0, game->width * 2, game->height / 3, "src/assets/fonts/font.ttf", 50, "Pressione ESC para sair");
   }
 
@@ -131,16 +131,26 @@ void game_animate(Game game)
     game->obstacle = NULL;
 
     obstacle_init(&(game->obstacle), game->renderer, game->width, game->height, type);
-
     queue_enqueue(game->queue, game->obstacle);
     game->obstacle = queue_dequeue(game->queue);
+  
+    // Por algumo motivo quando o primeiro elemento que é dado o enqueue fica invisivel quando as posições são resetadas, o resto funciona normalmente.
+    // obstacle_reset_position(game->obstacle, game->width, game->height);
   }
 
   character_animate(game->character, game->renderer, game->width, game->height, game->speed);
 
   char score[10];
   snprintf(score, 10, "%d", (int)game->score);
-  text_render(game->text, game->renderer, game->width * 0.85, 0, game->width, game->height, "src/assets/fonts/font.ttf", 50, score);
+
+  if (game->score > 100) {
+    text_render(game->text, game->renderer, game->width * 0.87, 0, game->width, game->height, "src/assets/fonts/font.ttf", 50, score);
+  } else if (game->score > 10) {
+    text_render(game->text, game->renderer, game->width * 0.90, 0, game->width * 0.75, game->height, "src/assets/fonts/font.ttf", 50, score);
+  } else {
+    text_render(game->text, game->renderer, game->width * 0.93, 0, game->width * 0.50, game->height, "src/assets/fonts/font.ttf", 50, score);
+  }
+
   SDL_RenderPresent(game->renderer);
 }
 
@@ -253,22 +263,22 @@ void game_frame(Game game, bool* quit)
   game_animate(game);
   *quit = game_events(game);
 
-  if (are_colliding(game->character, game->obstacle) && !*quit) {
+  // if (are_colliding(game->character, game->obstacle) && !*quit) {
 
-    SDL_Delay(1000);
-    character_set_dead(game->character, true);
+  //   SDL_Delay(1000);
+  //   character_set_dead(game->character, true);
 
-    while (character_is_ondisplay(game->character, game->height)) {
-      game->speed = 0;
-      game_animate(game);
-    }
+  //   while (character_is_ondisplay(game->character, game->height)) {
+  //     game->speed = 0;
+  //     game_animate(game);
+  //   }
 
-    *quit = game_menu(game, true);
+  //   *quit = game_menu(game, true);
 
-    if (!*quit)
-      game_reset(game);
+  //   if (!*quit)
+  //     game_reset(game);
 
-  }
+  // }
 
   frame_time = SDL_GetTicks() - startLoop;
   if (frame_time < FRAME_TIME) {
