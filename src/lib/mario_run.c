@@ -263,22 +263,22 @@ void game_frame(Game game, bool* quit)
   game_animate(game);
   *quit = game_events(game);
 
-  // if (are_colliding(game->character, game->obstacle) && !*quit) {
+  if (are_colliding(game->character, game->obstacle) && !*quit) {
 
-  //   SDL_Delay(1000);
-  //   character_set_dead(game->character, true);
+    SDL_Delay(1000);
+    character_set_dead(game->character, true);
 
-  //   while (character_is_ondisplay(game->character, game->height)) {
-  //     game->speed = 0;
-  //     game_animate(game);
-  //   }
+    while (character_is_ondisplay(game->character, game->height)) {
+      game->speed = 0;
+      game_animate(game);
+    }
 
-  //   *quit = game_menu(game, true);
+    *quit = game_menu(game, true);
 
-  //   if (!*quit)
-  //     game_reset(game);
+    if (!*quit)
+      game_reset(game);
 
-  // }
+  }
 
   frame_time = SDL_GetTicks() - startLoop;
   if (frame_time < FRAME_TIME) {
