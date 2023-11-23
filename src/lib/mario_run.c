@@ -52,11 +52,14 @@ void game_init(Game* game)
     queue_init(&(*game)->queue);
     srand(time(NULL));
 
-    for (int i = 0; i < 5; i++) {
+    int obstacle_init_size = 5;
+    for (int i = 0; i < obstacle_init_size; i++) {
       int type = (rand() % 5) + 1;
 
       obstacle_init(&(*game)->obstacle, (*game)->renderer, (*game)->width, (*game)->height, type);
-      queue_enqueue((*game)->queue, (*game)->obstacle);
+      if (i < obstacle_init_size - 2) {
+        queue_enqueue((*game)->queue, (*game)->obstacle);
+      } 
     }
 
   } else {
@@ -80,9 +83,9 @@ bool game_menu(Game game, bool is_dead)
     SDL_RenderFillRect(game->renderer, &rect);
     SDL_RenderPresent(game->renderer);
 
-    text_render(game->text, game->renderer, game->width * 0.35, game->height * 0.1, game->width * 3, game->height, "src/assets/fonts/font.ttf", 100, "Mario Run");
-    text_render(game->text, game->renderer, game->width * 0.3, game->height * 0.5, game->width * 4, game->height / 2, "src/assets/fonts/font.ttf", 100, "Pressione qualquer tecla para jogar");
-    text_render(game->text, game->renderer, 10, 0, game->width * 2, game->height / 3, "src/assets/fonts/font.ttf", 50, "Pressione ESC para sair");
+    text_render(game->text, game->renderer, game->width * 0.35, game->height * 0.1, game->width * 3, game->height, "src/assets/fonts/font.ttf", 100, "Mario Run", WHITE);
+    text_render(game->text, game->renderer, game->width * 0.3, game->height * 0.5, game->width * 4, game->height / 2, "src/assets/fonts/font.ttf", 100, "Pressione qualquer tecla para jogar", WHITE);
+    text_render(game->text, game->renderer, 10, 0, game->width * 2, game->height / 3, "src/assets/fonts/font.ttf", 50, "Pressione ESC para sair", WHITE) ;
   } else {
 
     for (int i = 0; i < 200; i += 3) {
@@ -94,9 +97,9 @@ bool game_menu(Game game, bool is_dead)
       SDL_Delay(10);
     }
 
-    text_render(game->text, game->renderer, game->width * 0.35, game->height * 0.1, game->width * 3, game->height, "src/assets/fonts/font.ttf", 100, "Game Over");
-    text_render(game->text, game->renderer, game->width * 0.25, game->height * 0.5, game->width * 5, game->height / 2, "src/assets/fonts/font.ttf", 100, "Pressione a tecla ENTER para jogar novamente");
-    text_render(game->text, game->renderer, 10, 0, game->width * 2, game->height / 3, "src/assets/fonts/font.ttf", 50, "Pressione ESC para sair");
+    text_render(game->text, game->renderer, game->width * 0.35, game->height * 0.1, game->width * 3, game->height, "src/assets/fonts/font.ttf", 100, "Game Over", WHITE);
+    text_render(game->text, game->renderer, game->width * 0.25, game->height * 0.5, game->width * 5, game->height / 2, "src/assets/fonts/font.ttf", 100, "Pressione a tecla ENTER para jogar novamente", WHITE);
+    text_render(game->text, game->renderer, 10, 0, game->width * 2, game->height / 3, "src/assets/fonts/font.ttf", 50, "Pressione ESC para sair", WHITE);
   }
 
   SDL_RenderPresent(game->renderer);
@@ -130,6 +133,15 @@ bool game_menu(Game game, bool is_dead)
 
   if (!quit) {
     for (int i = 200; i > 0; i -= 5) {
+      game_animate(game, false);
+      SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, i);
+      SDL_RenderFillRect(game->renderer, &rect);
+      SDL_RenderPresent(game->renderer);
+
+      SDL_Delay(10);
+    }
+  } else {
+    for (int i = 200; i < 255; i += 1) {
       game_animate(game, false);
       SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, i);
       SDL_RenderFillRect(game->renderer, &rect);
@@ -176,7 +188,7 @@ void game_animate(Game game, bool render)
     game->obstacle = queue_dequeue(game->queue);
 
     // Por algumo motivo quando o primeiro elemento que é dado o enqueue fica invisivel quando as posições são resetadas, o resto funciona normalmente.
-    // obstacle_reset_position(game->obstacle, game->width, game->height);
+    obstacle_reset_position(game->obstacle, game->width, game->height);
   }
 
   character_animate(game->character, game->renderer, game->width, game->height, speed);
@@ -185,11 +197,11 @@ void game_animate(Game game, bool render)
   snprintf(score, 10, "%d", (int)game->score);
 
   if (game->score > 100) {
-    text_render(game->text, game->renderer, game->width * 0.87, 0, game->width, game->height, "src/assets/fonts/font.ttf", 50, score);
+    text_render(game->text, game->renderer, game->width * 0.87, 0, game->width, game->height, "src/assets/fonts/font.ttf", 50, score, BLACK);
   } else if (game->score > 10) {
-    text_render(game->text, game->renderer, game->width * 0.90, 0, game->width * 0.75, game->height, "src/assets/fonts/font.ttf", 50, score);
+    text_render(game->text, game->renderer, game->width * 0.90, 0, game->width * 0.75, game->height, "src/assets/fonts/font.ttf", 50, score, BLACK);
   } else {
-    text_render(game->text, game->renderer, game->width * 0.93, 0, game->width * 0.50, game->height, "src/assets/fonts/font.ttf", 50, score);
+    text_render(game->text, game->renderer, game->width * 0.93, 0, game->width * 0.50, game->height, "src/assets/fonts/font.ttf", 50, score, BLACK);
   }
 
   if (render)
@@ -212,6 +224,7 @@ bool game_events(Game game)
         break;
       case SDL_QUIT:
         SDL_DestroyWindow(game->window);
+        character_set_dead(game->character, true);
         stop = true;
         break;
       case SDL_KEYDOWN:
@@ -290,7 +303,9 @@ void game_run(Game game)
     Mix_VolumeMusic(MIX_MAX_VOLUME / 2);
 
     while (!quit) {
-      game_frame(game, &quit);
+      if (!character_is_dead(game->character)) {
+        game_frame(game, &quit);
+      }
     }
   }
 
@@ -337,7 +352,7 @@ void game_reset(Game game)
   character_destroy(&game->character);
 
   obstacle_reset_position(game->obstacle, game->width, game->height);
-  
+
   game->score = 0;
   game->int_score = 50;
   game->speed = 4;

@@ -18,7 +18,7 @@ void obstacle_init(Obstacle* obstacle, SDL_Renderer* renderer, int width, int he
     (*obstacle)->type = type;
 
     char path[45];
-    snprintf(path, 45, "./src/assets/images/obstacles/obstacle%d.png", type == 5 ? 4 : type);
+    snprintf(path, 45, "./src/assets/images/obstacles/obstacle%d.png", (*obstacle)->type == 5 ? 4 : (*obstacle)->type); 
     (*obstacle)->texture = IMG_LoadTexture(renderer, path);
 
     if ((*obstacle)->texture == NULL) {
