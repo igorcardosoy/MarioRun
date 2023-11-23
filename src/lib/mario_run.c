@@ -52,7 +52,7 @@ void game_init(Game* game)
     queue_init(&(*game)->queue);
     srand(time(NULL));
 
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < 5; i++) {
       int type = (rand() % 5) + 1;
 
       obstacle_init(&(*game)->obstacle, (*game)->renderer, (*game)->width, (*game)->height, type);

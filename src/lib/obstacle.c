@@ -46,14 +46,14 @@ void obstacle_animate(Obstacle obstacle, SDL_Renderer* renderer, int width, int 
       obstacle->height = height * 0.15;
       break;
     case 4:
-      obstacle->width = width * 0.11;
+      obstacle->width = width * 0.09;
       obstacle->height = height * 0.11;
       if (obstacle->x == width) {
         obstacle->y = height * 0.65;
       }
       break;
     case 5:
-      obstacle->width = width * 0.11;
+      obstacle->width = width * 0.09;
       obstacle->height = height * 0.11;
       if (obstacle->x == width) {
         obstacle->y = height * 0.5;
