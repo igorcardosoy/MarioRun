@@ -71,6 +71,7 @@ bool game_menu(Game game, bool is_dead)
   SDL_Event event;
   SDL_Rect rect = { 0, 0, game->width, game->height };
 
+  game->speed = 0;
   game_animate(game, false);
 
   if (!is_dead) {
@@ -84,7 +85,8 @@ bool game_menu(Game game, bool is_dead)
     text_render(game->text, game->renderer, 10, 0, game->width * 2, game->height / 3, "src/assets/fonts/font.ttf", 50, "Pressione ESC para sair");
   } else {
 
-    for (int i = 0; i < 28; i++) {
+    for (int i = 0; i < 200; i += 3) {
+      game_animate(game, false);
       SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, i);
       SDL_RenderFillRect(game->renderer, &rect);
       SDL_RenderPresent(game->renderer);
@@ -126,11 +128,26 @@ bool game_menu(Game game, bool is_dead)
     }
   }
 
+  if (!quit) {
+    for (int i = 200; i > 0; i -= 5) {
+      game_animate(game, false);
+      SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, i);
+      SDL_RenderFillRect(game->renderer, &rect);
+      SDL_RenderPresent(game->renderer);
+
+      SDL_Delay(10);
+    }
+  }
+
+  game->speed = 4;
+
   return quit;
 }
 
 void game_animate(Game game, bool render)
 {
+  double speed = character_is_dead(game->character) ? 0 : game->speed;
+
   if (character_can_jump(game->character))
     character_set_falling(game->character, false);
 
@@ -144,9 +161,9 @@ void game_animate(Game game, bool render)
     }
   }
 
-  sky_animate(game->sky, game->renderer, game->width, game->height, game->speed);
-  obstacle_animate(game->obstacle, game->renderer, game->width, game->height, game->speed);
-  ground_animate(game->ground, game->renderer, game->width, game->height, game->speed);
+  sky_animate(game->sky, game->renderer, game->width, game->height, speed);
+  obstacle_animate(game->obstacle, game->renderer, game->width, game->height, speed);
+  ground_animate(game->ground, game->renderer, game->width, game->height, speed);
 
   if (obstacle_get_position_x(game->obstacle) <= -obstacle_get_width(game->obstacle)) {
     int type = (rand() % 5) + 1;
@@ -162,7 +179,7 @@ void game_animate(Game game, bool render)
     // obstacle_reset_position(game->obstacle, game->width, game->height);
   }
 
-  character_animate(game->character, game->renderer, game->width, game->height, game->speed);
+  character_animate(game->character, game->renderer, game->width, game->height, speed);
 
   char score[10];
   snprintf(score, 10, "%d", (int)game->score);
@@ -292,7 +309,6 @@ void game_frame(Game game, bool* quit)
   *quit = game_events(game);
 
   if (are_colliding(game->character, game->obstacle) && !*quit) {
-
     SDL_Delay(1000);
     character_set_dead(game->character, true);
 
@@ -306,23 +322,26 @@ void game_frame(Game game, bool* quit)
 
     if (!*quit)
       game_reset(game);
-
   }
 
   frame_time = SDL_GetTicks() - startLoop;
   if (frame_time < FRAME_TIME) {
     SDL_Delay(FRAME_TIME - frame_time);
   }
+
+  *quit = character_is_dead(game->character);
 }
 
 void game_reset(Game game)
 {
+  character_destroy(&game->character);
+
   obstacle_reset_position(game->obstacle, game->width, game->height);
+  
   game->score = 0;
   game->int_score = 50;
   game->speed = 4;
 
-  character_destroy(&game->character);
   character_init(&game->character, game->renderer, game->width, game->height);
 }
 
