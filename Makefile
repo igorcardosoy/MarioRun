@@ -33,6 +33,7 @@ linux   :
 linux-libs:
 			sudo apt-get install libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev
 
-icon	:	
+icon-win	:	
 			windres -i ./src/include/Icon.rc -o Icon.o
+
 

@@ -38,6 +38,7 @@ void game_init(Game* game)
 
     (*game)->window = SDL_CreateWindow("Mario Run", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 760, 540, SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
     (*game)->renderer = SDL_CreateRenderer((*game)->window, -1, SDL_RENDERER_ACCELERATED);
+    SDL_SetRenderDrawBlendMode((*game)->renderer, SDL_BLENDMODE_BLEND);
 
     SDL_GetWindowSize((*game)->window, &(*game)->width, &(*game)->height);
 
@@ -68,14 +69,31 @@ bool game_menu(Game game, bool is_dead)
   bool quit, stop;
   quit = stop = false;
   SDL_Event event;
+  SDL_Rect rect = { 0, 0, game->width, game->height };
+
+  game_animate(game, false);
 
   if (!is_dead) {
+
+    SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, 200);
+    SDL_RenderFillRect(game->renderer, &rect);
+    SDL_RenderPresent(game->renderer);
+
     text_render(game->text, game->renderer, game->width * 0.35, game->height * 0.1, game->width * 3, game->height, "src/assets/fonts/font.ttf", 100, "Mario Run");
     text_render(game->text, game->renderer, game->width * 0.3, game->height * 0.5, game->width * 4, game->height / 2, "src/assets/fonts/font.ttf", 100, "Pressione qualquer tecla para jogar");
     text_render(game->text, game->renderer, 10, 0, game->width * 2, game->height / 3, "src/assets/fonts/font.ttf", 50, "Pressione ESC para sair");
   } else {
+
+    for (int i = 0; i < 28; i++) {
+      SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, i);
+      SDL_RenderFillRect(game->renderer, &rect);
+      SDL_RenderPresent(game->renderer);
+
+      SDL_Delay(10);
+    }
+
     text_render(game->text, game->renderer, game->width * 0.35, game->height * 0.1, game->width * 3, game->height, "src/assets/fonts/font.ttf", 100, "Game Over");
-    text_render(game->text, game->renderer, game->width * 0.25, game->height * 0.5, game->width * 5, game->height / 2, "src/assets/fonts/font.ttf", 100, "Pressione qualquer tecla para jogar novamente");
+    text_render(game->text, game->renderer, game->width * 0.25, game->height * 0.5, game->width * 5, game->height / 2, "src/assets/fonts/font.ttf", 100, "Pressione a tecla ENTER para jogar novamente");
     text_render(game->text, game->renderer, 10, 0, game->width * 2, game->height / 3, "src/assets/fonts/font.ttf", 50, "Pressione ESC para sair");
   }
 
@@ -94,8 +112,14 @@ bool game_menu(Game game, bool is_dead)
               quit = true;
               stop = true;
               break;
-            default:
+            case SDLK_RETURN:
               stop = true;
+              break;
+            default:
+              if (!is_dead) {
+                stop = true;
+              }
+
               break;
           }
       }
@@ -105,7 +129,7 @@ bool game_menu(Game game, bool is_dead)
   return quit;
 }
 
-void game_animate(Game game)
+void game_animate(Game game, bool render)
 {
   if (character_can_jump(game->character))
     character_set_falling(game->character, false);
@@ -133,7 +157,7 @@ void game_animate(Game game)
     obstacle_init(&(game->obstacle), game->renderer, game->width, game->height, type);
     queue_enqueue(game->queue, game->obstacle);
     game->obstacle = queue_dequeue(game->queue);
-  
+
     // Por algumo motivo quando o primeiro elemento que é dado o enqueue fica invisivel quando as posições são resetadas, o resto funciona normalmente.
     // obstacle_reset_position(game->obstacle, game->width, game->height);
   }
@@ -151,7 +175,9 @@ void game_animate(Game game)
     text_render(game->text, game->renderer, game->width * 0.93, 0, game->width * 0.50, game->height, "src/assets/fonts/font.ttf", 50, score);
   }
 
-  SDL_RenderPresent(game->renderer);
+  if (render)
+    SDL_RenderPresent(game->renderer);
+
 }
 
 bool game_events(Game game)
@@ -202,23 +228,26 @@ bool game_events(Game game)
             }
             break;
           case SDLK_DOWN:
-            if (true) {};
-            const Uint8* state = SDL_GetKeyboardState(NULL);
-            if (state[SDL_SCANCODE_DOWN]) {
-              character_set_falling(game->character, true);
-              if (!character_can_jump(game->character)) {
-                for (int i = 0; i < game->height * 0.13 && !character_can_jump(game->character); i++) {
-                  character_fall(game->character, game->height);
-                  game_frame(game, &stop);
+            if (!character_is_dead(game->character)) {
+              const Uint8* state = SDL_GetKeyboardState(NULL);
+              if (state[SDL_SCANCODE_DOWN]) {
+                character_set_falling(game->character, true);
+                if (!character_can_jump(game->character)) {
+                  for (int i = 0; i < game->height * 0.13 && !character_can_jump(game->character); i++) {
+                    character_fall(game->character, game->height);
+                    game_frame(game, &stop);
+                  }
+                } else {
+                  while (state[SDL_SCANCODE_DOWN]) {
+                    character_crouch(game->character, true);
+                    game_frame(game, &stop);
+                  }
                 }
-              } else {
-                while (state[SDL_SCANCODE_DOWN]) {
-                  character_crouch(game->character, true);
-                  game_frame(game, &stop);
-                }
+                character_crouch(game->character, false);
               }
-              character_crouch(game->character, false);
             }
+
+
         }
     }
   }
@@ -227,7 +256,7 @@ bool game_events(Game game)
 
 void game_pause(Game game)
 {
-  game_animate(game);
+  game_animate(game, true);
 
   while (true) {
     game_events(game);
@@ -237,8 +266,6 @@ void game_pause(Game game)
 void game_run(Game game)
 {
   bool quit = false;
-
-  game_animate(game);
 
   if (!game_menu(game, false)) {
 
@@ -260,7 +287,8 @@ void game_frame(Game game, bool* quit)
 
   startLoop = SDL_GetTicks();
 
-  game_animate(game);
+  game_animate(game, true);
+
   *quit = game_events(game);
 
   if (are_colliding(game->character, game->obstacle) && !*quit) {
@@ -268,9 +296,10 @@ void game_frame(Game game, bool* quit)
     SDL_Delay(1000);
     character_set_dead(game->character, true);
 
+    game->speed = 0;
+
     while (character_is_ondisplay(game->character, game->height)) {
-      game->speed = 0;
-      game_animate(game);
+      game_animate(game, true);
     }
 
     *quit = game_menu(game, true);

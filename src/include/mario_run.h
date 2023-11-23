@@ -21,7 +21,7 @@ bool game_menu(Game game, bool is_dead);
 void game_pause(Game game);
 
 // Anima o jogo e todos os seus elementos.
-void game_animate(Game game);
+void game_animate(Game game, bool render);
 
 // Desenha um frame do jogo na tela.
 void game_frame(Game game, bool* quit);
