@@ -25,7 +25,7 @@ bool game_menu(Game game, bool is_dead);
 void game_menu_texts(Game game, bool is_dead, bool is_greater);
 
 // Colocar os textos do menu de morte para serem renderizados. Dependendo do valor de is_greater, o texto de "Adicionar no ranking" será renderizado.
-void game_menu_dead(Game game, bool is_greater);
+void game_menu_dead(Game game, bool is_greater, bool add_to_ranking);
 
 // Pausa o jogo e oferece algumas opções.
 void game_pause(Game game);

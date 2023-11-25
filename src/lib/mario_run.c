@@ -108,18 +108,18 @@ bool game_ranking(Game game)
 
   text_render(game->text, game->renderer, game->width * 0.35, game->height * 0.1, game->width * 3, game->height, 100, "Ranking", WHITE);
   text_render(game->text, game->renderer, 10, 10, game->width * 2, game->height / 3, 50, "[ESC] Sair do jogo", WHITE);
-  text_render(game->text, game->renderer, 10, game->height * 0.9, game->width*1.5, game->height / 3, 50, "[ENTER] Voltar", WHITE);
+  text_render(game->text, game->renderer, 10, game->height * 0.9, game->width * 1.5, game->height / 3, 50, "[ENTER] Voltar", WHITE);
 
   for (int i = 0; i < ranking_get_size(game->ranking); i++) {
-    char* text = malloc(sizeof(char) * 20);
+    char* text = malloc(sizeof(char) * 25);
     text = ranking_get(game->ranking, i);
 
     int size = string_size(text);
     text[size] = '\0';
 
-    char* rank = malloc(sizeof(char) * 20);
-    snprintf(rank, 20, "%d: %s", i + 1, text);
-    text_render(game->text, game->renderer, game->width * 0.4, game->height * 0.2 + (i + 1) * 50, game->width*2, game->height * 0.35, 100, rank, WHITE);
+    char* rank = malloc(sizeof(char) * 25);
+    snprintf(rank, 25, "%d: %s", i + 1, text);
+    text_render(game->text, game->renderer, game->width * 0.4, game->height * 0.2 + (i + 1) * 50, game->width * 2, game->height * 0.35, 100, rank, WHITE);
 
     free(text);
     free(rank);
@@ -150,7 +150,7 @@ bool game_ranking(Game game)
   return quit;
 }
 
-void game_menu_dead(Game game, bool is_greater)
+void game_menu_dead(Game game, bool is_greater, bool add_to_ranking)
 {
   game_fade(game, 200);
 
@@ -158,7 +158,7 @@ void game_menu_dead(Game game, bool is_greater)
   text_render(game->text, game->renderer, game->width * 0.35, game->height * 0.5, game->width * 3, game->height / 2, 100, "[ENTER] Jogar novamente", WHITE);
   text_render(game->text, game->renderer, 10, 10, game->width * 2, game->height / 3, 50, "[ESC] Sair do jogo", WHITE);
 
-  if (is_greater) {
+  if (is_greater && !add_to_ranking) {
     text_render(game->text, game->renderer, game->width * 0.325, game->height * 0.6, game->width * 3.5, game->height / 2, 100, "[TAB] Adicionar ao ranking", WHITE);
     text_render(game->text, game->renderer, game->width * 0.35, game->height * 0.7, game->width * 3, game->height / 2, 100, "[R] Ver ranking", WHITE);
   } else {
@@ -180,7 +180,7 @@ void game_menu_texts(Game game, bool is_dead, bool is_greater)
     text_render(game->text, game->renderer, 10, 10, game->width * 2, game->height / 3, 50, "[ESC] Sair do jogo", WHITE);
 
   } else {
-    game_menu_dead(game, is_greater);
+    game_menu_dead(game, is_greater, false);
   }
 }
 
@@ -271,7 +271,7 @@ bool game_menu(Game game, bool is_dead)
                   ranking_save(game->ranking);
                 }
 
-                game_menu_dead(game, is_greater);
+                game_menu_dead(game, is_greater, add_to_ranking);
                 SDL_RenderPresent(game->renderer);
               }
               break;
