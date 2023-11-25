@@ -119,7 +119,7 @@ bool game_ranking(Game game)
 
     char* rank = malloc(sizeof(char) * 20);
     snprintf(rank, 20, "%d: %s", i + 1, text);
-    text_render(game->text, game->renderer, game->width * 0.4, game->height * 0.2 + (i + 1) * 70, game->width*2, game->height * 0.35, 100, rank, WHITE);
+    text_render(game->text, game->renderer, game->width * 0.4, game->height * 0.2 + (i + 1) * 50, game->width*2, game->height * 0.35, 100, rank, WHITE);
 
     free(text);
     free(rank);
@@ -249,7 +249,7 @@ bool game_menu(Game game, bool is_dead)
                         }
                         break;
                       case SDL_TEXTINPUT:
-                        if (i < 12) {
+                        if (i < 11) {
                           if (event.text.text[0] != ' ') {
                             name[i] = event.text.text[0];
                             i++;
