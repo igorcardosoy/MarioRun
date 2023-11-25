@@ -5,6 +5,7 @@
 #include "./ground.h"
 #include "./character.h"   
 #include "./text.h"
+#include "./ranking.h"
 
 #define FRAME_RATE 144
 #define FRAME_TIME 1000 / FRAME_RATE
@@ -14,14 +15,29 @@ typedef struct game_type* Game;
 // Inicializa o jogo (game).
 void game_init(Game* game);
 
+// Mostra a tela de ranking na tela.
+bool game_ranking(Game game);
+
 // Mostra o menu na tela.
 bool game_menu(Game game, bool is_dead);
+
+// Colocar os textos do menu para serem renderizados. Dependendo do valor de is_dead, o texto de "Game Over" será renderizado.
+void game_menu_texts(Game game, bool is_dead, bool is_greater);
+
+// Colocar os textos do menu de morte para serem renderizados. Dependendo do valor de is_greater, o texto de "Adicionar no ranking" será renderizado.
+void game_menu_dead(Game game, bool is_greater);
 
 // Pausa o jogo e oferece algumas opções.
 void game_pause(Game game);
 
 // Anima o jogo e todos os seus elementos.
 void game_animate(Game game, bool render);
+
+// Anima um frame fixo de fade.
+void game_fade(Game game, int i);
+
+// Anima um fade de um valor inicial até um valor final. Dependendo do valor de fade_in, o fade será de preto para transparente ou de transparente para preto.
+void game_do_fade(Game game, int initial, int end, bool fade_in);
 
 // Desenha um frame do jogo na tela.
 void game_frame(Game game, bool* quit);

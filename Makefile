@@ -24,7 +24,7 @@ $(NAME)	:	$(OBJ)
 
 win 	: 	
 			$(CC) -o $(NAME)_win64 $(SRC) $(SDL2_PATH) $(CFLAGS) $(LDLIBS_WIN)
-			cls  
+			
 
 linux   :  	
 			$(CC) -o $(NAME)_linux $(SRC) $(CFLAGS) $(LDLIBS_LINUX)

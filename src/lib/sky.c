@@ -40,4 +40,5 @@ void sky_animate(Sky sky, SDL_Renderer* renderer, int width, int height, double 
 void sky_destroy(Sky* sky)
 {
   SDL_DestroyTexture((*sky)->texture);
+  free(*sky);
 }

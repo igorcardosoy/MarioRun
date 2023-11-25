@@ -108,4 +108,5 @@ void obstacle_get_colision(Obstacle obstacle, int* x1, int* x2, int* y1, int* y2
 void obstacle_destroy(Obstacle* obstacle)
 {
   SDL_DestroyTexture((*obstacle)->texture);
+  free(*obstacle);
 }

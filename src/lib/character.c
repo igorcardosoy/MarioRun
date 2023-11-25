@@ -200,6 +200,7 @@ int character_get_position_y(Character character)
 
 void character_destroy(Character* character)
 {
+
   for (int i = 0; i < 12; i++) {
     SDL_DestroyTexture((*character)->animation[i]);
   }
@@ -208,4 +209,5 @@ void character_destroy(Character* character)
   SDL_DestroyTexture((*character)->texture_dead);
   Mix_FreeChunk((*character)->death_sound);
   Mix_FreeChunk((*character)->jump_sound);
+  free(*character);
 }

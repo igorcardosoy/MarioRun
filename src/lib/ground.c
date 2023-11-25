@@ -42,4 +42,5 @@ void ground_animate(Ground ground, SDL_Renderer* renderer, int width, int height
 void ground_destroy(Ground* ground)
 {
   SDL_DestroyTexture((*ground)->texture);
+  free(*ground);
 }

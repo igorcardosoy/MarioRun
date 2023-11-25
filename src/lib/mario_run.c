@@ -6,6 +6,7 @@ struct game_type {
   Character character;
   Obstacle obstacle;
   Queue queue;
+  Ranking ranking;
   Text text;
   double speed;
   double score;
@@ -36,7 +37,7 @@ void game_init(Game* game)
     (*game)->score = 0;
     (*game)->int_score = 50;
 
-    (*game)->window = SDL_CreateWindow("Mario Run", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 760, 540, SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
+    (*game)->window = SDL_CreateWindow("Mario Run", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_RESIZABLE | SDL_WINDOW_FULLSCREEN_DESKTOP);
     (*game)->renderer = SDL_CreateRenderer((*game)->window, -1, SDL_RENDERER_ACCELERATED);
     SDL_SetRenderDrawBlendMode((*game)->renderer, SDL_BLENDMODE_BLEND);
 
@@ -44,6 +45,7 @@ void game_init(Game* game)
 
     (*game)->main_song = Mix_LoadMUS("./src/assets/audios/musica_tema.mp3");
 
+    ranking_init(&(*game)->ranking);
     sky_init(&(*game)->sky, (*game)->renderer);
     ground_init(&(*game)->ground, (*game)->renderer);
     character_init(&(*game)->character, (*game)->renderer, (*game)->width, (*game)->height);
@@ -59,52 +61,144 @@ void game_init(Game* game)
       obstacle_init(&(*game)->obstacle, (*game)->renderer, (*game)->width, (*game)->height, type);
       if (i < obstacle_init_size - 2) {
         queue_enqueue((*game)->queue, (*game)->obstacle);
-      } 
+      }
     }
 
   } else {
     printf("Erro ao alocar jogo!\n");
+  }
+
+  ranking_save((*game)->ranking);
+}
+
+void game_fade(Game game, int i)
+{
+  SDL_Rect rect = { 0, 0, game->width, game->height };
+  game_animate(game, false);
+  SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, i);
+  SDL_RenderFillRect(game->renderer, &rect);
+}
+
+void game_do_fade(Game game, int initial, int end, bool fade_in)
+{
+  if (fade_in) {
+    for (int i = initial; i < end; i += 3) {
+      game_fade(game, i);
+      SDL_RenderPresent(game->renderer);
+      SDL_Delay(10);
+    }
+  } else {
+    for (int i = initial; i > end; i -= 5) {
+      game_fade(game, i);
+      SDL_RenderPresent(game->renderer);
+      SDL_Delay(10);
+    }
+  }
+}
+
+bool game_ranking(Game game)
+{
+  bool quit, stop;
+  quit = stop = false;
+  SDL_Event event;
+
+  SDL_RenderClear(game->renderer);
+  game_fade(game, 200);
+  SDL_RenderPresent(game->renderer);
+
+  text_render(game->text, game->renderer, game->width * 0.35, game->height * 0.1, game->width * 3, game->height, 100, "Ranking", WHITE);
+  text_render(game->text, game->renderer, 10, 10, game->width * 2, game->height / 3, 50, "[ESC] Sair do jogo", WHITE);
+  text_render(game->text, game->renderer, 10, game->height * 0.9, game->width*1.5, game->height / 3, 50, "[ENTER] Voltar", WHITE);
+
+  for (int i = 0; i < ranking_get_size(game->ranking); i++) {
+    char* text = malloc(sizeof(char) * 20);
+    text = ranking_get(game->ranking, i);
+
+    int size = string_size(text);
+    text[size] = '\0';
+
+    char* rank = malloc(sizeof(char) * 20);
+    snprintf(rank, 20, "%d: %s", i + 1, text);
+    text_render(game->text, game->renderer, game->width * 0.4, game->height * 0.2 + (i + 1) * 70, game->width*2, game->height * 0.35, 100, rank, WHITE);
+
+    free(text);
+    free(rank);
+  }
+
+
+  SDL_RenderPresent(game->renderer);
+
+  while (!stop && !quit) {
+    while (SDL_PollEvent(&event)) {
+      switch (event.type) {
+        case SDL_QUIT:
+          quit = true;
+          break;
+        case SDL_KEYDOWN:
+          switch (event.key.keysym.sym) {
+            case SDLK_ESCAPE:
+              quit = true;
+              break;
+            case SDLK_RETURN:
+              stop = true;
+              break;
+          }
+      }
+    }
+  }
+
+  return quit;
+}
+
+void game_menu_dead(Game game, bool is_greater)
+{
+  game_fade(game, 200);
+
+  text_render(game->text, game->renderer, game->width * 0.35, game->height * 0.1, game->width * 3, game->height, 100, "Game Over", WHITE);
+  text_render(game->text, game->renderer, game->width * 0.35, game->height * 0.5, game->width * 3, game->height / 2, 100, "[ENTER] Jogar novamente", WHITE);
+  text_render(game->text, game->renderer, 10, 10, game->width * 2, game->height / 3, 50, "[ESC] Sair do jogo", WHITE);
+
+  if (is_greater) {
+    text_render(game->text, game->renderer, game->width * 0.325, game->height * 0.6, game->width * 3.5, game->height / 2, 100, "[TAB] Adicionar ao ranking", WHITE);
+    text_render(game->text, game->renderer, game->width * 0.35, game->height * 0.7, game->width * 3, game->height / 2, 100, "[R] Ver ranking", WHITE);
+  } else {
+    text_render(game->text, game->renderer, game->width * 0.35, game->height * 0.6, game->width * 3, game->height / 2, 100, "[R] Ver ranking", WHITE);
+  }
+}
+
+void game_menu_texts(Game game, bool is_dead, bool is_greater)
+{
+  game_animate(game, false);
+
+  if (!is_dead) {
+    game_fade(game, 200);
+    SDL_RenderPresent(game->renderer);
+
+    text_render(game->text, game->renderer, game->width * 0.35, game->height * 0.1, game->width * 3, game->height, 100, "Mario Run", WHITE);
+    text_render(game->text, game->renderer, game->width * 0.3, game->height * 0.5, game->width * 4, game->height / 2, 100, "Pressione qualquer tecla para iniciar", WHITE);
+    text_render(game->text, game->renderer, game->width * 0.35, game->height * 0.6, game->width * 3, game->height / 2, 100, "[R] Ver ranking", WHITE);
+    text_render(game->text, game->renderer, 10, 10, game->width * 2, game->height / 3, 50, "[ESC] Sair do jogo", WHITE);
+
+  } else {
+    game_menu_dead(game, is_greater);
   }
 }
 
 bool game_menu(Game game, bool is_dead)
 {
   bool quit, stop;
+  bool add_to_ranking = false;
+  bool is_greater = ranking_is_greater(game->ranking, (int)game->score);
   quit = stop = false;
   SDL_Event event;
-  SDL_Rect rect = { 0, 0, game->width, game->height };
 
   game->speed = 0;
-  game_animate(game, false);
 
-  if (!is_dead) {
-
-    SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, 200);
-    SDL_RenderFillRect(game->renderer, &rect);
-    SDL_RenderPresent(game->renderer);
-
-    text_render(game->text, game->renderer, game->width * 0.35, game->height * 0.1, game->width * 3, game->height, "src/assets/fonts/font.ttf", 100, "Mario Run", WHITE);
-    text_render(game->text, game->renderer, game->width * 0.3, game->height * 0.5, game->width * 4, game->height / 2, "src/assets/fonts/font.ttf", 100, "Pressione qualquer tecla para jogar", WHITE);
-    text_render(game->text, game->renderer, 10, 0, game->width * 2, game->height / 3, "src/assets/fonts/font.ttf", 50, "Pressione ESC para sair", WHITE) ;
-  } else {
-
-    for (int i = 0; i < 200; i += 3) {
-      game_animate(game, false);
-      SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, i);
-      SDL_RenderFillRect(game->renderer, &rect);
-      SDL_RenderPresent(game->renderer);
-
-      SDL_Delay(10);
-    }
-
-    text_render(game->text, game->renderer, game->width * 0.35, game->height * 0.1, game->width * 3, game->height, "src/assets/fonts/font.ttf", 100, "Game Over", WHITE);
-    text_render(game->text, game->renderer, game->width * 0.25, game->height * 0.5, game->width * 5, game->height / 2, "src/assets/fonts/font.ttf", 100, "Pressione a tecla ENTER para jogar novamente", WHITE);
-    text_render(game->text, game->renderer, 10, 0, game->width * 2, game->height / 3, "src/assets/fonts/font.ttf", 50, "Pressione ESC para sair", WHITE);
-  }
-
+  game_do_fade(game, 0, 200, true);
+  game_menu_texts(game, is_dead, is_greater);
   SDL_RenderPresent(game->renderer);
 
-  while (!stop) {
+  while (!stop && !quit) {
     while (SDL_PollEvent(&event)) {
       switch (event.type) {
         case SDL_QUIT:
@@ -113,12 +207,85 @@ bool game_menu(Game game, bool is_dead)
           break;
         case SDL_KEYDOWN:
           switch (event.key.keysym.sym) {
+            case SDLK_TAB:
+              if (is_greater && !add_to_ranking) {
+                game_fade(game, 200);
+                text_render(game->text, game->renderer, game->width * 0.25, game->height * 0.1, game->width * 5, game->height, 100, "Digite seu nome:", WHITE);
+                SDL_RenderPresent(game->renderer);
+
+                SDL_StartTextInput();
+
+                char name[12] = { '\0' };
+                int i = 0;
+
+                bool done = false;
+                while (!quit && !done) {
+                  while (SDL_PollEvent(&event)) {
+                    switch (event.type) {
+                      case SDL_QUIT:
+                        quit = true;
+                        break;
+                      case SDL_KEYDOWN:
+                        switch (event.key.keysym.sym) {
+                          case SDLK_RETURN:
+                            if (i > 0) {
+                              add_to_ranking = true;
+                              done = true;
+                            }
+                            break;
+                          case SDLK_ESCAPE:
+                            quit = true;
+                            break;
+                          case SDLK_BACKSPACE:
+                            if (i > 0) {
+                              i--;
+                              name[i] = '\0';
+                              game_fade(game, 200);
+                              text_render(game->text, game->renderer, game->width * 0.25, game->height * 0.1, game->width * 5, game->height, 100, "Digite seu nome:", WHITE);
+                              text_render(game->text, game->renderer, (game->width * 0.5) - (i * game->width * 0.015), game->height * 0.3, (game->width * i) * 0.3, game->height, 100, name, WHITE);
+                              SDL_RenderPresent(game->renderer);
+                            }
+                            break;
+                        }
+                        break;
+                      case SDL_TEXTINPUT:
+                        if (i < 12) {
+                          if (event.text.text[0] != ' ') {
+                            name[i] = event.text.text[0];
+                            i++;
+                            game_fade(game, 200);
+                            text_render(game->text, game->renderer, game->width * 0.25, game->height * 0.1, game->width * 5, game->height, 100, "Digite seu nome:", WHITE);
+                            text_render(game->text, game->renderer, (game->width * 0.5) - (i * game->width * 0.015), game->height * 0.3, (game->width * i) * 0.3, game->height, 100, name, WHITE);
+                            SDL_RenderPresent(game->renderer);
+                          }
+                        }
+                        break;
+                    }
+                  }
+                }
+
+                SDL_StopTextInput();
+
+                if (add_to_ranking) {
+                  ranking_add(game->ranking, name, (int)game->score);
+                  ranking_save(game->ranking);
+                }
+
+                game_menu_dead(game, is_greater);
+                SDL_RenderPresent(game->renderer);
+              }
+              break;
             case SDLK_ESCAPE:
               quit = true;
-              stop = true;
               break;
             case SDLK_RETURN:
               stop = true;
+              break;
+            case SDLK_r:
+              quit = game_ranking(game);
+              game_fade(game, 200);
+              game_menu_texts(game, is_dead, is_greater);
+              SDL_RenderPresent(game->renderer);
               break;
             default:
               if (!is_dead) {
@@ -132,23 +299,9 @@ bool game_menu(Game game, bool is_dead)
   }
 
   if (!quit) {
-    for (int i = 200; i > 0; i -= 5) {
-      game_animate(game, false);
-      SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, i);
-      SDL_RenderFillRect(game->renderer, &rect);
-      SDL_RenderPresent(game->renderer);
-
-      SDL_Delay(10);
-    }
+    game_do_fade(game, 200, 0, false);
   } else {
-    for (int i = 200; i < 255; i += 1) {
-      game_animate(game, false);
-      SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, i);
-      SDL_RenderFillRect(game->renderer, &rect);
-      SDL_RenderPresent(game->renderer);
-
-      SDL_Delay(10);
-    }
+    game_do_fade(game, 200, 255, true);
   }
 
   game->speed = 4;
@@ -197,11 +350,11 @@ void game_animate(Game game, bool render)
   snprintf(score, 10, "%d", (int)game->score);
 
   if (game->score > 100) {
-    text_render(game->text, game->renderer, game->width * 0.87, 0, game->width, game->height, "src/assets/fonts/font.ttf", 50, score, BLACK);
+    text_render(game->text, game->renderer, game->width * 0.87, 0, game->width, game->height, 50, score, BLACK);
   } else if (game->score > 10) {
-    text_render(game->text, game->renderer, game->width * 0.90, 0, game->width * 0.75, game->height, "src/assets/fonts/font.ttf", 50, score, BLACK);
+    text_render(game->text, game->renderer, game->width * 0.90, 0, game->width * 0.75, game->height, 50, score, BLACK);
   } else {
-    text_render(game->text, game->renderer, game->width * 0.93, 0, game->width * 0.50, game->height, "src/assets/fonts/font.ttf", 50, score, BLACK);
+    text_render(game->text, game->renderer, game->width * 0.93, 0, game->width * 0.50, game->height, 50, score, BLACK);
   }
 
   if (render)
@@ -309,6 +462,8 @@ void game_run(Game game)
     }
   }
 
+
+
   game_destroy(&game);
 }
 
@@ -349,9 +504,9 @@ void game_frame(Game game, bool* quit)
 
 void game_reset(Game game)
 {
-  character_destroy(&game->character);
-
   obstacle_reset_position(game->obstacle, game->width, game->height);
+
+  character_destroy(&game->character);
 
   game->score = 0;
   game->int_score = 50;
@@ -387,6 +542,8 @@ void game_destroy(Game* game)
   character_destroy(&(*game)->character);
   obstacle_destroy(&(*game)->obstacle);
   queue_destroy(&(*game)->queue);
+  ranking_destroy(&(*game)->ranking);
+  text_destroy(&(*game)->text);
 
   Mix_CloseAudio();
   Mix_FreeMusic((*game)->main_song);

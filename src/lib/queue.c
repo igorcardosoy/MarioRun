@@ -58,12 +58,16 @@ bool queue_destroy(Queue* queue)
   Element trash_collector;
   bool feedback = false;
 
+
   while (!queue_is_empty(*queue)) {
     trash_collector = queue_dequeue(*queue);
     obstacle_destroy(&trash_collector);
   }
 
+  free(*queue);
+  
   feedback = true;
+
 
   return feedback;
 }
