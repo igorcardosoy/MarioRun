@@ -15,19 +15,47 @@ Mario Run é uma emocionante recriação do famoso jogo "Google Dino Run", inser
 Para jogar o Mario Run, siga as instruções abaixo:
 
 ### 1. Baixar:
-    
+
+Para realizar o download, baixe ou clone o repositório.
+
+  - Windows:
+      As DLLs e o SDL2 estão no repositório.
+
+  - Linux:
+        Para Linux, é necessário que baixe o SDL2 e suas bibliotecas extras. Para fazer isso, pode abrir o terminal na pasta do MarioRun e rodar o comando a seguir:
+
+        make linux-libs
 
 ### 2. Compilar e Instalar:
 
+Apos já ter o SDL2 e suas bibliotecas auxiliares, basta dar o comando:
+
+- Para Windowns:
+
+      mingw32-make win
+  
+- Para Linux:
+
+      make linux
+
 
 ### 3. Executar:
-...
+
+Pode se executar abrindo o executavel criado após a compilação ou utilizando o terminal:
+
+- Para Windowns:
+
+      ./MarioRun_win64.exe
+  
+- Para Linux:
+
+      ./MarioRun_linux64
 
 ## Controles:
 
 O jogo é controlado pelas seguintes teclas:
 
-- **Seta para Cima ou Barra de Espaço (Spacebar):** Pula sobre obstáculos.
+- **Seta para Cima ou Barra de Espaço:** Pula sobre obstáculos.
 - **Seta para Baixo** Agacha ou faz o personagem cair mais rapidamente ao chão durante o pulo.
 
 Certifique-se de usar esses controles de forma estratégica para evitar obstáculos e alcançar a maior pontuação!
@@ -59,8 +87,10 @@ Foi utilizado para o projeto:
 
 ## Screenshots:
 
-(Obs: Aguarde a adição de capturas de tela explicativas pelos desenvolvedores.)
-
+ <img width="100%" height="100%" src="https://i.imgur.com/of46iTQ.png" alt="Menu Inicial - MarioRun"/>
+ <img width="100%" height="100%" src="https://i.imgur.com/CEWM8Ax.png" alt="Menu Inicial - MarioRun"/> 
+ <img width="100%" height="100%" src="https://i.imgur.com/Z63vbxG.png" alt="Menu Inicial - MarioRun"/> 
+ <img width="100%" height="100%" src="https://i.imgur.com/d9YoXxR.png" alt="Menu Inicial - MarioRun"/> 
 
 ## Detalhes da Metodologia de Desenvolvimento:
 
@@ -70,7 +100,3 @@ Foi utilizado para o projeto:
 - outras informações referentes ao processo de desenvolvimento...
 
 ---
-
-*Este README.md foi criado como um modelo inicial. Aguarde a adição das informações específicas pelos desenvolvedores do projeto.*
-
-
