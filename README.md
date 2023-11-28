@@ -100,7 +100,3 @@ Foi utilizado para o projeto:
 - outras informações referentes ao processo de desenvolvimento...
 
 ---
-
-*Este README.md foi criado como um modelo inicial. Aguarde a adição das informações específicas pelos desenvolvedores do projeto.*
-
-
