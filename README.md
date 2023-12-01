@@ -72,13 +72,22 @@ Este jogo foi desenvolvido pelos seguintes alunos do IFSP, Campus Araraquara, no
 
 ## Descrição do Projeto:
 
-(Obs: Aguarde a adição da descrição do projeto e da estrutura do software pelos desenvolvedores.)
-- Descreva a estrutura do software (incluindo a estrutura de dados). 
-- Incluir informações sobre a estratégia escolhida para implementação do jogo (se houve mudança durante o desenvolvimento deve-se descrever também);
+Toda estrutura do projeto foi desenvolvida em torno do conceito de TAD, Tipo Abstrato de Dados. No MarioRun todos tipos são um TAD, o chão, o céu, o própio mario e o obstaculo. Foram criados TADs auxiliares também, como o Text para gerar textos de forma mais simples, o ranking do jogo, e a estrutura de dados que também é um TAD é a Fila.
+
+O jogo gira em torno de pular de obstaculos vindo em direção ao Mario, para fazermos isso utilizamos uma fila de obstaculos, onde quando o jogo é iniciado a fila é preenchida com varios obstaculos, ao começar o jogo é tirada da fila o primeiro elemento, e ao chagar ao final da tela ele é excluido e entra outro obstaculo de forma aleatoria na fila, assim sempre tendo novos obstaculos de forma aletoria.
+
+A estratégia principal para criação do jogo foi separar os objetos, ou seja, criar TADs para cada coisa, para assim conseguirmos trabalhar de forma mais organizada e conseguir ir testando o jogo aos poucos. A primeira coisa a ser criada foi a definição base das funções de cada TAD, definindo e colocando o que cada uma iria fazer dentro do jogo. Com a evolução do jogo, foram criadas mais funções e algumas deixaram de existir.
+
+Fomos implementando aos poucos, de coisas mais simples até as mais complexas. Começamos pelo Céu e pelo Chão, que são relativamente faceis, onde apenas andam da direita para esquerda, e quando chegam ao final da tela voltam para o inicio, assim dando a sensação de movimento. A animação do personagem foi feita com um vetor de SDL_Textures, onde cada textura era um frame da animação, que, conforme a velocidade do jogo aumenta a velocidade da animação também. Um dos sistemas mais dificeis de fazer foi o pulo e caso segure o personagem pule mais alto, agachar e trocar a textura ao clicar com a flecha para baixo e caso esteja no ar cair mais rapido. Esse sistema do personagem foi o mais complicado de deixar bom, sem parecer um pulo muito duro ou muito distoante de algo normal.
+
+Fomos evoluindo o jogo até ele já estar praticamente funcional, onde você abria o jogo, e ele ja iniciava, morria e o jogo fechava. Essa foi a primeira versão jogavél, posteriormente fomos melhorando mais o código para criação de menu, para morte e para o inicio. 
+
+A ultima coisa a ser adicionada até o momento foi o sistema de ranking persistente, que se utiliza um arquivo .txt para guardar as informações dos rankings, ao abrir o jogo ele lê o scores.txt e salva em um vetor(Possibilidade de uso de LSE), ao fechar o jogo ele salva os dados do vetor no arquivo, assim não perdendo os dados ao fechar o jogo.
 
 Foi utilizado para o projeto:
 
-- C
+- Linguagem de progamação C
+- Bibliotecas para interface gráfica:
 - [SDL2](https://github.com/libsdl-org/SDL)
 - [SDL_image](https://github.com/libsdl-org/SDL_image)
 - [SDL_mixer](https://github.com/libsdl-org/SDL_mixer)
