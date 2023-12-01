@@ -98,8 +98,10 @@ Foi utilizado para o projeto:
 
  <img width="100%" height="100%" src="https://i.imgur.com/of46iTQ.png" alt="Menu Inicial - MarioRun"/>
  <img width="100%" height="100%" src="https://i.imgur.com/CEWM8Ax.png" alt="Menu Inicial - MarioRun"/> 
- <img width="100%" height="100%" src="https://i.imgur.com/Z63vbxG.png" alt="Menu Inicial - MarioRun"/> 
  <img width="100%" height="100%" src="https://i.imgur.com/d9YoXxR.png" alt="Menu Inicial - MarioRun"/> 
+
+  - Ranking das pessoas que jogaram na mostra de trabalho.
+  <img width="100%" height="100%" src="https://i.imgur.com/Z63vbxG.png" alt="Menu Inicial - MarioRun"/> 
 
 ## Detalhes da Metodologia de Desenvolvimento:
 
