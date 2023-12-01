@@ -87,7 +87,8 @@ A ultima coisa a ser adicionada até o momento foi o sistema de ranking persiste
 Foi utilizado para o projeto:
 
 - Linguagem de progamação C
-- Bibliotecas para interface gráfica:
+
+Bibliotecas para interface gráfica:
 - [SDL2](https://github.com/libsdl-org/SDL)
 - [SDL_image](https://github.com/libsdl-org/SDL_image)
 - [SDL_mixer](https://github.com/libsdl-org/SDL_mixer)
