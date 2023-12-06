@@ -11,16 +11,16 @@ OBJ		=	$(SRC:.c=.o)
 
 SDL2_PATH =	-I ./SDL2/include/ -L ./SDL2/lib/
 
-CFLAGS	=	-Wall -std=c99  ./src/include/Icon.o
+CFLAGS	=	-Wall -std=c99
 
 LDLIBS_WIN	=	-lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
 
-LBLIBS_LINUX =	-ldl -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
+LDLIBS_LINUX =	-ldl -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
 
 all		:	$(NAME)
 
 $(NAME)	:	$(OBJ)
-			$(CC) -o $(NAME) $(SRC) $(SDL2_PATH) $(CFLAGS) $(LDLIBS_WIN)
+			$(CC) -o $(NAME) $(SRC) $(SDL2_PATH) $(CFLAGS) ./src/include/Icon.o $(LDLIBS_WIN)
 
 win 	: 	
 			$(CC) -o $(NAME)_win64 $(SRC) $(SDL2_PATH) $(CFLAGS) $(LDLIBS_WIN)
