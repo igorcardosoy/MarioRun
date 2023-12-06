@@ -45,15 +45,12 @@ bool ranking_add(Ranking ranking, char* name, int score)
   bool is_greater = false;
   bool is_on_ranking = false;
   int i = 0;
+  char* buffer = malloc(sizeof(char) * 20);
 
-  snprintf(name, 20, "%s ", name);
+  snprintf(buffer, 20, "%s ", name);
 
   while (i < ranking->size && !is_on_ranking) {
-
-    printf("%s.\n", ranking->names[i]);
-    printf("%s.\n", name);
-
-    if (strcmp(name, ranking->names[i]) == 0) {
+    if (strcmp(buffer, ranking->names[i]) == 0) {
       is_on_ranking = true;
     }
     i++;
@@ -68,7 +65,7 @@ bool ranking_add(Ranking ranking, char* name, int score)
           strcpy(ranking->names[j], ranking->names[j - 1]);
         }
         ranking->score_points[i] = score;
-        snprintf(ranking->names[i], 20, "%s", name);
+        snprintf(ranking->names[i], 20, "%s", buffer);
         is_greater = true;
       }
       i++;
@@ -93,9 +90,12 @@ bool ranking_add(Ranking ranking, char* name, int score)
         strcpy(temp_name, ranking->names[i]);
         strcpy(ranking->names[i], ranking->names[j]);
         strcpy(ranking->names[j], temp_name);
+
+        free(temp_name);
       }
     }
   }
+  free(buffer);
 
   return is_greater;
 }
