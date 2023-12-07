@@ -106,7 +106,7 @@ Bibliotecas para interface gráfica:
 
 - Ranking das pessoas que jogaram na mostra de trabalho.
  
-![Ranking - MarioRun](https://i.imgur.com/Z63vbxG.png)
+![Ranking - MarioRun](https://i.imgur.com/bjr7dwe.png)
 
 ## Detalhes da Metodologia de Desenvolvimento:
 
