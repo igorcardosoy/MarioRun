@@ -25,8 +25,6 @@ void ranking_init(Ranking* ranking)
 
     strtok((*ranking)->names[i], "-");
     (*ranking)->score_points[i] = atoi(strtok(NULL, ";"));
-
-    printf("%s\n", ranking_get(*ranking, i));
   }
 }
 
