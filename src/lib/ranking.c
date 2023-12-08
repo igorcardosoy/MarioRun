@@ -24,7 +24,7 @@ void ranking_init(Ranking* ranking)
     fgets((*ranking)->names[i], 20, (*ranking)->file);
 
     strtok((*ranking)->names[i], "-");
-    (*ranking)->score_points[i] = atoi(strtok(NULL, " "));
+    (*ranking)->score_points[i] = atoi(strtok(NULL, ";"));
 
     printf("%s\n", ranking_get(*ranking, i));
   }
