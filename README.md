@@ -117,3 +117,6 @@ A divisão dos trabalhos foi realizada de forma colaborativa entre os desenvolve
 A definição dos módulos foi realizada de maneira estruturada, seguindo o conceito de Tipo Abstrato de Dados (TAD). Cada elemento no jogo, como o chão, o céu, o personagem Mario e os obstáculos, foi tratado como um TAD separado. Isso proporcionou uma abstração clara e organizada do sistema, facilitando o desenvolvimento e a manutenção do código. Além disso, foram criados TADs auxiliares, como o Text para simplificar a geração de textos, o ranking do jogo e a estrutura de dados Fila para gerenciar os obstáculos de forma eficiente.
 
 Em resumo, o processo de desenvolvimento foi marcado por uma abordagem iterativa, divisão clara de tarefas, discussões em aula para tomada de decisões e utilização eficiente de ferramentas como o Trello para o gerenciamento do projeto.
+
+## Vídeo:
+[![Vídeo Explicativo do Jogo](https://img.youtube.com/vi/66tCkYeJjBI/0.jpg)](https://youtu.be/66tCkYeJjBI)
